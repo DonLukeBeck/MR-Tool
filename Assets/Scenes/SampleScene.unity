@@ -3057,11 +3057,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 998177334102873599, guid: e34a55dc5f03dfb47bc691e9b871a549, type: 3}
       propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2541371317367914922, guid: e34a55dc5f03dfb47bc691e9b871a549, type: 3}
-      propertyPath: m_Name
-      value: Lego Bricks
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2872226364976959141, guid: e34a55dc5f03dfb47bc691e9b871a549, type: 3}
       propertyPath: m_SelectMode
@@ -3085,6 +3081,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3747324752984950367, guid: e34a55dc5f03dfb47bc691e9b871a549, type: 3}
       propertyPath: m_AllowOneHandedScaling
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9139749005349407176, guid: e34a55dc5f03dfb47bc691e9b871a549, type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
