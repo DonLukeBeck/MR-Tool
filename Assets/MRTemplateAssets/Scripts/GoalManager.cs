@@ -91,6 +91,12 @@ public class GoalManager : MonoBehaviour
     GameObject m_InteractiveMenu;
 
     [SerializeField]
+    GameObject m_LeftHand;
+
+    [SerializeField]
+    GameObject m_RightHand;
+
+    [SerializeField]
     GameObject m_ModelLocationPointer;
 
     [SerializeField]
@@ -259,11 +265,9 @@ public class GoalManager : MonoBehaviour
 
         if (m_CurrentGoal.CurrentGoal == OnboardingGoals.FindSurfaces)
         {
-            if (m_FadeMaterial != null)
-                m_FadeMaterial.FadeSkybox(true);
 
-            if (m_PassthroughToggle != null)
-                m_PassthroughToggle.isOn = true;
+            //if (m_PassthroughToggle != null)
+            //    m_PassthroughToggle.isOn = true;
 
             if (m_LearnButton != null)
             {
@@ -309,25 +313,29 @@ public class GoalManager : MonoBehaviour
     {
         m_CoachingUIParent.transform.localScale = Vector3.zero;
 
+        // turn on video instructions
         TurnOnVideoPlayer();
-        //Show3DModel();
-        //ShowInteractiveMenu();
+
+        //show 3D Model
+        if (m_3DModel != null)
+            m_3DModel.SetActive(true);
+
+        // show Interactive Menu  
+        if (m_InteractiveMenu != null)
+            m_InteractiveMenu.SetActive(true);
 
         if (m_VideoPlayerToggle != null)
             m_VideoPlayerToggle.isOn = true;
 
-        //if (m_ModelLocationPointerToggle != null)
-        //    m_ModelLocationPointerToggle.isOn = true;
-
-        if (m_3DModel != null)
-            m_3DModel.SetActive(true);
-
-        if (m_InteractiveMenu != null)
-            m_InteractiveMenu.SetActive(true);
-
-
+        //toggle passthrough off
         if (m_FadeMaterial != null)
         {
+            if(m_LeftHand != null)
+                m_LeftHand.SetActive(false);
+
+            if (m_RightHand != null)
+                m_RightHand.SetActive(false);
+
             m_FadeMaterial.FadeSkybox(true);
 
             if (m_PassthroughToggle != null)
@@ -406,7 +414,7 @@ public class GoalManager : MonoBehaviour
         }
     }
 
-    public void TooglePlayer(bool visibility)
+    public void TogglePlayer(bool visibility)
     {
         if (visibility)
         {
@@ -418,7 +426,7 @@ public class GoalManager : MonoBehaviour
         }
     }
 
-    public void ToogleModelLocationPointer(bool visibility)
+    public void ToggleModelLocationPointer(bool visibility)
     {
         if (visibility)
         {
@@ -427,6 +435,22 @@ public class GoalManager : MonoBehaviour
         else
         {
             m_ModelLocationPointer.SetActive(false);
+        }
+    }
+
+    public void TogglePassthrough(bool visibility)
+    {
+        if (visibility)
+        {
+            m_FadeMaterial.FadeSkybox(true);
+            m_LeftHand.SetActive(false);
+            m_RightHand.SetActive(false);
+        }
+        else
+        {
+            m_FadeMaterial.FadeSkybox(false);
+            m_LeftHand.SetActive(true);
+            m_RightHand.SetActive(true);
         }
     }
 
