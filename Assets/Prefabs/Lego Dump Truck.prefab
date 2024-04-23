@@ -36,7 +36,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1765625267217364160}
-  - {fileID: 8474993739602105202}
+  - {fileID: 2886546858705197840}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4380179111879285882
@@ -681,7 +681,7 @@ MonoBehaviour:
         stateExited: {fileID: 0}
     m_Variable: {fileID: 11400000, guid: 5c5c73ead290d6441aaa736f48f64242, type: 2}
   m_AudioSource: {fileID: 6082602405361311398}
---- !u!1001 &8221181044307129497
+--- !u!1001 &3424330483022560507
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -689,18 +689,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 407848796822200479}
     m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: 6d4dd533d62f1ca469f3c6501102b84e, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 4.347826
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 6d4dd533d62f1ca469f3c6501102b84e, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.8333333
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 6d4dd533d62f1ca469f3c6501102b84e, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 2.5
-      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6d4dd533d62f1ca469f3c6501102b84e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.010434783
@@ -750,8 +738,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d4dd533d62f1ca469f3c6501102b84e, type: 3}
---- !u!4 &8474993739602105202 stripped
+--- !u!4 &2886546858705197840 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6d4dd533d62f1ca469f3c6501102b84e, type: 3}
-  m_PrefabInstance: {fileID: 8221181044307129497}
+  m_PrefabInstance: {fileID: 3424330483022560507}
   m_PrefabAsset: {fileID: 0}
