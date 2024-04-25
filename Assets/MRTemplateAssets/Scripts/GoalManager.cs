@@ -58,28 +58,13 @@ public class GoalManager : MonoBehaviour
     public GameObject m_SkipButton;
 
     [SerializeField]
-    GameObject m_LearnButton;
-
-    [SerializeField]
-    GameObject m_LearnModal;
-
-    [SerializeField]
-    Button m_LearnModalButton;
-
-    [SerializeField]
     GameObject m_CoachingUIParent;
 
     [SerializeField]
     FadeMaterial m_FadeMaterial;
 
     [SerializeField]
-    Toggle m_PassthroughToggle;
-
-    [SerializeField]
     LazyFollow m_GoalPanelLazyFollow;
-
-    [SerializeField]
-    GameObject m_TapTooltip;
 
     [SerializeField]
     GameObject m_VideoPlayer;
@@ -105,15 +90,15 @@ public class GoalManager : MonoBehaviour
     [SerializeField]
     Toggle m_ModelLocationPointerToggle;
 
+    [SerializeField]
+    Toggle m_PassthroughToggle;
 
     [SerializeField]
     ARPlaneManager m_ARPlaneManager;
 
-    [SerializeField]
-    ObjectSpawner m_ObjectSpawner;
+    Vector3 m_TargetOffset = new Vector3(0f, -.25f, 1.5f);
 
-    const int k_NumberOfSurfacesTappedToCompleteGoal = 1;
-    Vector3 m_TargetOffset = new Vector3(-.5f, -.25f, 1.5f);
+    int k_step = 0;
 
     void Start()
     {
@@ -129,8 +114,6 @@ public class GoalManager : MonoBehaviour
         m_OnboardingGoals.Enqueue(endGoal);
 
         m_CurrentGoal = m_OnboardingGoals.Dequeue();
-        if (m_TapTooltip != null)
-            m_TapTooltip.SetActive(false);
 
         if (m_VideoPlayer != null)
         {
@@ -156,49 +139,38 @@ public class GoalManager : MonoBehaviour
                 m_PassthroughToggle.isOn = false;
         }
 
-        if (m_LearnButton != null)
-        {
-            m_LearnButton.GetComponent<Button>().onClick.AddListener(OpenModal); ;
-            m_LearnButton.SetActive(false);
-        }
-
-        if (m_LearnModal != null)
-        {
-            m_LearnModal.transform.localScale = Vector3.zero;
-        }
-
-        if (m_LearnModalButton != null)
-        {
-            m_LearnModalButton.onClick.AddListener(CloseModal);
-        }
-
-        if (m_ObjectSpawner == null)
-        {
-#if UNITY_2023_1_OR_NEWER
-            m_ObjectSpawner = FindAnyObjectByType<ObjectSpawner>();
-#else
-            m_ObjectSpawner = FindObjectOfType<ObjectSpawner>();
-#endif
-        }
     }
 
-    void OpenModal()
+    public void NextStep()
     {
-        if (m_LearnModal != null)
-        {
-            m_LearnModal.transform.localScale = Vector3.one;
-        }
+
+        k_step++;
     }
 
-    void CloseModal()
+    public void PreviousStep()
     {
-        if (m_LearnModal != null)
-        {
-            m_LearnModal.transform.localScale = Vector3.zero;
-        }
+
+        k_step--;
+    }
+
+    public void SendPicture()
+    {
+
+        
+    }
+
+    public void AskQuestion()
+    {
+
+        
     }
 
 
+    public void Restart()
+    {
+
+        k_step = 0;
+    }
 
     void Update()
     {
@@ -229,10 +201,6 @@ public class GoalManager : MonoBehaviour
                     m_GoalPanelLazyFollow.positionFollowMode = LazyFollow.PositionFollowMode.Follow;
                     break;
                 case OnboardingGoals.TapSurface:
-                    if (m_TapTooltip != null)
-                    {
-                        m_TapTooltip.SetActive(true);
-                    }
                     m_GoalPanelLazyFollow.positionFollowMode = LazyFollow.PositionFollowMode.None;
                     break;
             }
@@ -241,12 +209,6 @@ public class GoalManager : MonoBehaviour
 
     void CompleteGoal()
     {
-        //if (m_CurrentGoal.CurrentGoal == OnboardingGoals.TapSurface)
-        //    m_ObjectSpawner.objectSpawned -= OnObjectSpawned;
-
-        // disable tooltips before setting next goal
-        DisableTooltips();
-
         m_CurrentGoal.Completed = true;
         m_CurrentGoalIndex++;
         if (m_OnboardingGoals.Count > 0)
@@ -261,46 +223,6 @@ public class GoalManager : MonoBehaviour
         {
             m_AllGoalsFinished = true;
             ForceEndAllGoals();
-        }
-
-        if (m_CurrentGoal.CurrentGoal == OnboardingGoals.FindSurfaces)
-        {
-
-            //if (m_PassthroughToggle != null)
-            //    m_PassthroughToggle.isOn = true;
-
-            if (m_LearnButton != null)
-            {
-                m_LearnButton.SetActive(true);
-            }
-
-            StartCoroutine(TurnOnPlanes());
-        }
-        else if (m_CurrentGoal.CurrentGoal == OnboardingGoals.TapSurface)
-        {
-            if (m_LearnButton != null)
-            {
-                m_LearnButton.SetActive(false);
-            }
-            m_SurfacesTapped = 0;
-            //m_ObjectSpawner.objectSpawned += OnObjectSpawned;
-        }
-    }
-
-    public IEnumerator TurnOnPlanes()
-    {
-        yield return new WaitForSeconds(1f);
-        m_ARPlaneManager.enabled = true;
-    }
-
-    void DisableTooltips()
-    {
-        if (m_CurrentGoal.CurrentGoal == OnboardingGoals.TapSurface)
-        {
-            if (m_TapTooltip != null)
-            {
-                m_TapTooltip.SetActive(false);
-            }
         }
     }
 
@@ -341,18 +263,6 @@ public class GoalManager : MonoBehaviour
             if (m_PassthroughToggle != null)
                 m_PassthroughToggle.isOn = true;
         }
-
-        if (m_LearnButton != null)
-        {
-            m_LearnButton.SetActive(false);
-        }
-
-        if (m_LearnModal != null)
-        {
-            m_LearnModal.transform.localScale = Vector3.zero;
-        }
-
-        StartCoroutine(TurnOnPlanes());
     }
 
     public void ResetCoaching()
@@ -388,30 +298,7 @@ public class GoalManager : MonoBehaviour
         m_CurrentGoal = m_OnboardingGoals.Dequeue();
         m_AllGoalsFinished = false;
 
-        if (m_TapTooltip != null)
-            m_TapTooltip.SetActive(false);
-
-        if (m_LearnButton != null)
-        {
-            m_LearnButton.SetActive(false);
-        }
-
-        if (m_LearnModal != null)
-        {
-            m_LearnModal.transform.localScale = Vector3.zero;
-        }
-
         m_CurrentGoalIndex = 0;
-    }
-
-    void OnObjectSpawned(GameObject spawnedObject)
-    {
-        m_SurfacesTapped++;
-        if (m_CurrentGoal.CurrentGoal == OnboardingGoals.TapSurface && m_SurfacesTapped >= k_NumberOfSurfacesTappedToCompleteGoal)
-        {
-            CompleteGoal();
-            m_GoalPanelLazyFollow.positionFollowMode = LazyFollow.PositionFollowMode.Follow;
-        }
     }
 
     public void TogglePlayer(bool visibility)
