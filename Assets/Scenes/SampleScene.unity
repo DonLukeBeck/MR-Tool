@@ -419,6 +419,16 @@ MonoBehaviour:
   m_Image: {fileID: 357356508}
   m_CanvasGroup: {fileID: 0}
   m_IgnoreAlpha: 0
+--- !u!1 &217997186 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2182273010415458258, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
+  m_PrefabInstance: {fileID: 7150799292932950291}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &226254238 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2513206888620221163, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
+  m_PrefabInstance: {fileID: 7150799292932950291}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &248358149 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7025650970629357321, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
@@ -1599,6 +1609,17 @@ MonoBehaviour:
       m_Calls: []
   m_SkinnedMeshRenderer: {fileID: 1291399511}
   m_BlendShapeIndex: 0
+--- !u!114 &707993533 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1835351150185737757, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
+  m_PrefabInstance: {fileID: 7150799292932950291}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &744734200
 GameObject:
   m_ObjectHideFlags: 0
@@ -2056,6 +2077,11 @@ Transform:
   - {fileID: 1241364537}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1219637760 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7565350212709117632, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
+  m_PrefabInstance: {fileID: 7150799292932950291}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1241364534 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 996bc95e1b6dfc847aead2de66dc4a91, type: 3}
@@ -2588,6 +2614,11 @@ MonoBehaviour:
   m_MinAngleAllowed: 0.1
   m_MaxAngleAllowed: 2
   m_TimeUntilThresholdReachesMaxAngle: 3
+--- !u!1 &1293981331 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2541371317367914922, guid: e34a55dc5f03dfb47bc691e9b871a549, type: 3}
+  m_PrefabInstance: {fileID: 51060532128337158}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1358952311 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8204371881179850711, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
@@ -3922,6 +3953,11 @@ VideoPlayer:
   m_WaitForFirstFrame: 1
   m_FrameReadyEventEnabled: 0
   m_VideoShaders: []
+--- !u!1 &2032225990 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 107022194881254628, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
+  m_PrefabInstance: {fileID: 7150799292932950291}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2035819532
 GameObject:
   m_ObjectHideFlags: 0
@@ -4112,6 +4148,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lego Bricks
       objectReference: {fileID: 0}
+    - target: {fileID: 2541371317367914922, guid: e34a55dc5f03dfb47bc691e9b871a549, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2872226364976959141, guid: e34a55dc5f03dfb47bc691e9b871a549, type: 3}
       propertyPath: m_SelectMode
       value: 1
@@ -4134,6 +4174,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3747324752984950367, guid: e34a55dc5f03dfb47bc691e9b871a549, type: 3}
       propertyPath: m_AllowOneHandedScaling
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5393367877577893211, guid: e34a55dc5f03dfb47bc691e9b871a549, type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9139749005349407176, guid: e34a55dc5f03dfb47bc691e9b871a549, type: 3}
@@ -4249,9 +4293,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1241364538}
     - target: {fileID: 1983781844452491184, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
+      propertyPath: m_3DModelPieces
+      value: 
+      objectReference: {fileID: 1293981331}
+    - target: {fileID: 1983781844452491184, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
       propertyPath: m_ObjectSpawner
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1983781844452491184, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
+      propertyPath: m_RestartButton
+      value: 
+      objectReference: {fileID: 2032225990}
     - target: {fileID: 1983781844452491184, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
       propertyPath: m_InteractiveMenu
       value: 
@@ -4265,13 +4317,29 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1983781844452491184, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
+      propertyPath: m_AskQuestionButton
+      value: 
+      objectReference: {fileID: 1219637760}
+    - target: {fileID: 1983781844452491184, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
       propertyPath: m_PassthroughToggle
       value: 
       objectReference: {fileID: 640935317}
     - target: {fileID: 1983781844452491184, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
+      propertyPath: m_PreviouStepButton
+      value: 
+      objectReference: {fileID: 217997186}
+    - target: {fileID: 1983781844452491184, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
+      propertyPath: m_SendPictureButton
+      value: 
+      objectReference: {fileID: 226254238}
+    - target: {fileID: 1983781844452491184, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
       propertyPath: m_VideoPlayerToggle
       value: 
       objectReference: {fileID: 1589940042}
+    - target: {fileID: 1983781844452491184, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
+      propertyPath: m_PreviousStepButton
+      value: 
+      objectReference: {fileID: 217997186}
     - target: {fileID: 1983781844452491184, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
       propertyPath: m_CoachingCanvasGroup
       value: 
@@ -4296,6 +4364,10 @@ PrefabInstance:
       propertyPath: m_GoalPanels.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1983781844452491184, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
+      propertyPath: m_NextStepButtonTextField
+      value: 
+      objectReference: {fileID: 707993533}
     - target: {fileID: 1983781844452491184, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
       propertyPath: m_GoalPanels.Array.data[0]
       value: 
@@ -4674,6 +4746,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1109407790274764220}
+    - target: {fileID: 811008583495768909, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1467003472333817015, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
       propertyPath: m_Name
       value: Next Step Button

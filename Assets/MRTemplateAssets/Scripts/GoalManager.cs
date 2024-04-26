@@ -1,12 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets;
 using TMPro;
+using DG.Tweening;
 using LazyFollow = UnityEngine.XR.Interaction.Toolkit.UI.LazyFollow;
 
 public struct Goal
@@ -33,7 +32,6 @@ public class GoalManager : MonoBehaviour
     Queue<Goal> m_OnboardingGoals;
     Goal m_CurrentGoal;
     bool m_AllGoalsFinished;
-    int m_SurfacesTapped;
     int m_CurrentGoalIndex = 0;
 
     [Serializable]
@@ -58,6 +56,21 @@ public class GoalManager : MonoBehaviour
     public GameObject m_SkipButton;
 
     [SerializeField]
+    public TextMeshProUGUI m_NextStepButtonTextField;
+
+    [SerializeField]
+    public GameObject m_PreviousStepButton;
+
+    [SerializeField]
+    public GameObject m_AskQuestionButton;
+
+    [SerializeField]
+    public GameObject m_SendPictureButton;
+
+    [SerializeField]
+    public GameObject m_RestartButton;
+
+    [SerializeField]
     GameObject m_CoachingUIParent;
 
     [SerializeField]
@@ -71,6 +84,12 @@ public class GoalManager : MonoBehaviour
 
     [SerializeField]
     GameObject m_3DModel;
+
+    [SerializeField]
+    GameObject m_3DModelPieces;
+
+    [SerializeField]
+    Scrollbar m_progressBar;
 
     [SerializeField]
     GameObject m_InteractiveMenu;
@@ -96,24 +115,44 @@ public class GoalManager : MonoBehaviour
     [SerializeField]
     ARPlaneManager m_ARPlaneManager;
 
-    Vector3 m_TargetOffset = new Vector3(0f, -.25f, 1.5f);
+    private Vector3 m_TargetOffset = new Vector3(0f, -.25f, 1.5f);
 
-    int k_step = 0;
+    private int k_step = 0;
+    private float k_children = 0;
+
+    private List<GameObject> m_Child = new List<GameObject>();
 
     void Start()
     {
+        // Initialize the goals
         m_OnboardingGoals = new Queue<Goal>();
         var welcomeGoal = new Goal(OnboardingGoals.Empty);
         var findSurfaceGoal = new Goal(OnboardingGoals.FindSurfaces);
         var tapSurfaceGoal = new Goal(OnboardingGoals.TapSurface);
         var endGoal = new Goal(OnboardingGoals.Empty);
 
+        // Add the goals to the queue
         m_OnboardingGoals.Enqueue(welcomeGoal);
         m_OnboardingGoals.Enqueue(findSurfaceGoal);
         m_OnboardingGoals.Enqueue(tapSurfaceGoal);
         m_OnboardingGoals.Enqueue(endGoal);
 
         m_CurrentGoal = m_OnboardingGoals.Dequeue();
+
+        // Set the first button text in the interactive menu and hide all the rest 
+        m_NextStepButtonTextField.text = "Start Assembly";
+        m_PreviousStepButton.SetActive(false);
+        m_AskQuestionButton.SetActive(false);
+        m_SendPictureButton.SetActive(false);
+        m_RestartButton.SetActive(false);
+
+        // Add children to the list
+        foreach (Transform child in m_3DModelPieces.transform)
+        {
+            m_Child.Add(child.gameObject);
+        }
+
+        k_children = m_Child.Count;
 
         if (m_VideoPlayer != null)
         {
@@ -141,35 +180,102 @@ public class GoalManager : MonoBehaviour
 
     }
 
+    // Next step button functioanlity
     public void NextStep()
     {
+        //first step
+        if (k_step == 0)
+        {
+            // show interactive menu buttons
+            m_NextStepButtonTextField.text = "Next Step";
+            m_PreviousStepButton.SetActive(true);
+            m_AskQuestionButton.SetActive(true);
+            m_SendPictureButton.SetActive(true);
+            m_RestartButton.SetActive(true);
 
-        k_step++;
+            // hide all pieces
+            for (int i = 0; i < m_Child.Count; i++)
+            {
+                m_Child[i].SetActive(false);
+            }
+
+            // show first piece
+            m_Child[0].SetActive(true);
+            k_step++;
+        }
+        //last step
+        else if (k_step == k_children - 1)
+        {
+            // show last piece
+            m_Child[k_step].SetActive(true);
+        }
+        //middle steps
+        else
+        {
+            // color animation for each piece
+            Material[] m_Materials = m_Child[k_step].GetComponent<MeshRenderer>().materials;
+            foreach (Material m in m_Materials)
+            {
+                m.DOColor(Color.red, 3f).From();
+            }
+
+            // show next piece
+            m_Child[k_step].SetActive(true);
+            k_step++;
+        }
     }
 
+    // Previous step button functionality
     public void PreviousStep()
     {
-
-        k_step--;
+        //middle steps
+        if (k_step > 0)
+        {
+            m_Child[k_step].SetActive(false);
+            k_step--;
+        }
+        // first step
+        else {
+            // restore inital interactive menu
+            m_NextStepButtonTextField.text = "Start Assembly";
+            m_PreviousStepButton.SetActive(false);
+            m_AskQuestionButton.SetActive(false);
+            m_SendPictureButton.SetActive(false);
+            m_RestartButton.SetActive(false);
+            // display model
+            m_3DModelPieces.SetActive(true);
+        }
     }
 
+
+    // Send picture button functionality
     public void SendPicture()
     {
 
         
     }
 
+
+    // Ask question button functionality
     public void AskQuestion()
     {
 
         
     }
 
-
+    // Restart button functionality
     public void Restart()
     {
-
         k_step = 0;
+
+        // restore inital interactive menu
+        m_NextStepButtonTextField.text = "Start Assembly";
+        m_PreviousStepButton.SetActive(false);
+        m_AskQuestionButton.SetActive(false);
+        m_SendPictureButton.SetActive(false);
+        m_RestartButton.SetActive(false);
+        // display model
+        m_3DModelPieces.SetActive(true);
     }
 
     void Update()
