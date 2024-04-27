@@ -154,6 +154,7 @@ public class GoalManager : MonoBehaviour
 
         k_children = m_Child.Count;
 
+        // Set video player
         if (m_VideoPlayer != null)
         {
             m_VideoPlayer.SetActive(false);
@@ -162,6 +163,7 @@ public class GoalManager : MonoBehaviour
                 m_VideoPlayerToggle.isOn = false;
         }
 
+        // Set arrow pointer
         if (m_ModelLocationPointer != null)
         {
             m_ModelLocationPointer.SetActive(false);
@@ -170,6 +172,7 @@ public class GoalManager : MonoBehaviour
                 m_ModelLocationPointerToggle.isOn = false;
         }
 
+        // Set passthrough
         if (m_FadeMaterial != null)
         {
             m_FadeMaterial.FadeSkybox(false);
@@ -183,43 +186,43 @@ public class GoalManager : MonoBehaviour
     // Next step button functioanlity
     public void NextStep()
     {
-        //first step
+        // First step
         if (k_step == 0)
         {
-            // show interactive menu buttons
+            // Show interactive menu buttons
             m_NextStepButtonTextField.text = "Next Step";
             m_PreviousStepButton.SetActive(true);
             m_AskQuestionButton.SetActive(true);
             m_SendPictureButton.SetActive(true);
             m_RestartButton.SetActive(true);
 
-            // hide all pieces
+            // Hide all pieces
             for (int i = 0; i < m_Child.Count; i++)
             {
                 m_Child[i].SetActive(false);
             }
 
-            // show first piece
+            // Show first piece
             m_Child[0].SetActive(true);
             k_step++;
         }
-        //last step
+        // Last step
         else if (k_step == k_children - 1)
         {
-            // show last piece
+            // Show last piece
             m_Child[k_step].SetActive(true);
         }
-        //middle steps
+        // Middle steps
         else
         {
-            // color animation for each piece
+            // Color animation for each piece
             Material[] m_Materials = m_Child[k_step].GetComponent<MeshRenderer>().materials;
             foreach (Material m in m_Materials)
             {
                 m.DOColor(Color.red, 3f).From();
             }
 
-            // show next piece
+            // Show next piece
             m_Child[k_step].SetActive(true);
             k_step++;
         }
@@ -228,22 +231,25 @@ public class GoalManager : MonoBehaviour
     // Previous step button functionality
     public void PreviousStep()
     {
-        //middle steps
+        // Middle steps
         if (k_step > 0)
         {
             m_Child[k_step].SetActive(false);
             k_step--;
         }
-        // first step
+        // First step
         else {
-            // restore inital interactive menu
+            // Restore inital interactive menu
             m_NextStepButtonTextField.text = "Start Assembly";
             m_PreviousStepButton.SetActive(false);
             m_AskQuestionButton.SetActive(false);
             m_SendPictureButton.SetActive(false);
             m_RestartButton.SetActive(false);
-            // display model
-            m_3DModelPieces.SetActive(true);
+            // Display model
+            for (int i = 0; i < m_Child.Count; i++)
+            {
+                m_Child[i].SetActive(true);
+            }
         }
     }
 
@@ -251,16 +257,31 @@ public class GoalManager : MonoBehaviour
     // Send picture button functionality
     public void SendPicture()
     {
+        // Capture image
+        Texture2D screenshot = ScreenCapture.CaptureScreenshotAsTexture();
 
-        
+        // Convert to byte array
+        byte[] bytes = screenshot.EncodeToPNG();
+
+        // Show screenshot
+        //screenshot.SaveAsPNG("screenshot.png");
+
+        // Release memory
+        Destroy(screenshot);
+
+        //
+
+        // Send step to server (remove line if dialogue agent has a Vision Language Model and can recognize the step from the image)
+        //SendData("Step " + k_step.ToString());
     }
 
 
     // Ask question button functionality
     public void AskQuestion()
     {
+        // Send question to server
+        //SendData("Question " + k_step.ToString());
 
-        
     }
 
     // Restart button functionality
@@ -268,14 +289,17 @@ public class GoalManager : MonoBehaviour
     {
         k_step = 0;
 
-        // restore inital interactive menu
+        // Restore inital interactive menu
         m_NextStepButtonTextField.text = "Start Assembly";
         m_PreviousStepButton.SetActive(false);
         m_AskQuestionButton.SetActive(false);
         m_SendPictureButton.SetActive(false);
         m_RestartButton.SetActive(false);
-        // display model
-        m_3DModelPieces.SetActive(true);
+        // Display model
+        for (int i = 0; i < m_Child.Count; i++)
+        {
+            m_Child[i].SetActive(true);
+        }
     }
 
     void Update()
@@ -341,21 +365,21 @@ public class GoalManager : MonoBehaviour
     {
         m_CoachingUIParent.transform.localScale = Vector3.zero;
 
-        // turn on video instructions
+        // Turn on video instructions
         TurnOnVideoPlayer();
 
-        //show 3D Model
+        // Show 3D Model
         if (m_3DModel != null)
             m_3DModel.SetActive(true);
 
-        // show Interactive Menu  
+        // Show Interactive Menu  
         if (m_InteractiveMenu != null)
             m_InteractiveMenu.SetActive(true);
 
         if (m_VideoPlayerToggle != null)
             m_VideoPlayerToggle.isOn = true;
 
-        //toggle passthrough off
+        // Toggle passthrough off
         if (m_FadeMaterial != null)
         {
             if(m_LeftHand != null)

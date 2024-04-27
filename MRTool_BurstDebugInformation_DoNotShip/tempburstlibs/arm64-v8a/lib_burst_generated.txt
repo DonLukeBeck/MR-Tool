@@ -9,7 +9,9 @@ Library: E:\Projects\MR Tool\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_
 --float-precision=Standard
 --target-framework=NetFramework
 --float-mode=Fast
+--assembly-defines=Assembly-CSharp-firstpass;
 --assembly-defines=Assembly-CSharp;
+--assembly-defines=DOTween;
 --assembly-defines=Mono.Security;
 --assembly-defines=mscorlib;
 --assembly-defines=System.Configuration;
@@ -60,7 +62,9 @@ Library: E:\Projects\MR Tool\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib_burst_
 --dump=Function
 --float-precision=Standard
 --target-framework=NetFramework
+--assembly-defines=Assembly-CSharp-firstpass;
 --assembly-defines=Assembly-CSharp;
+--assembly-defines=DOTween;
 --assembly-defines=Mono.Security;
 --assembly-defines=mscorlib;
 --assembly-defines=System.Configuration;
