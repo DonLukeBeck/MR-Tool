@@ -327,12 +327,12 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.meta-openxr": {
-      "version": "1.0.1",
+      "version": "2.0.0-pre.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.xr.openxr": "1.7.0",
-        "com.unity.xr.arfoundation": "5.1.0-pre.6"
+        "com.unity.xr.openxr": "1.9.1",
+        "com.unity.xr.arfoundation": "6.0.0-pre.7"
       },
       "url": "https://packages.unity.com"
     },
