@@ -5,6 +5,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using UnityEngine.Android;
 
 public class UdpSocket : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class UdpSocket : MonoBehaviour
     [SerializeField] int rxPort = 8000; // port to receive data from Python on
     [SerializeField] int txPort = 8001; // port to send data to Python on
 
-    //[SerializeField] string IP = "38.242.140.110"; // ngrok server (replace with your own server that hosts the dialogue agent)
+    //[SerializeField] string IP = "38.242.140.110"; // nginx server (replace with your own server that hosts the dialogue agent)
     //[SerializeField] int rxPort = 8021; // port to receive data from Python on
     //[SerializeField] int txPort = 8020; // port to send data to Python on
 
@@ -51,6 +52,13 @@ public class UdpSocket : MonoBehaviour
 
     void Awake()
     {
+        // Request user permissions
+        Permission.RequestUserPermission("android.permission.WRITE_EXTERNAL_STORAGE");
+        Permission.RequestUserPermission("android.permission.READ_EXTERNAL_STORAGE");
+        Permission.RequestUserPermission("android.permission.CAMERA");
+        Permission.RequestUserPermission("android.permission.INTERNET");
+        Permission.RequestUserPermission("android.permission.RECORD_AUDIO");
+
         // Create remote endpoint 
         remoteEndPoint = new IPEndPoint(IPAddress.Parse(IP), txPort);
 
