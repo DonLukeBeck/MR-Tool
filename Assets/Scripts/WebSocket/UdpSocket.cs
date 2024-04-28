@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;
 using System.Text;
 using System.Net;
@@ -19,30 +18,17 @@ public class UdpSocket : MonoBehaviour
     //[SerializeField] int rxPort = 8021; // port to receive data from Python on
     //[SerializeField] int txPort = 8020; // port to send data to Python on
 
-    int i = 0; // DELETE THIS: Added to show sending data from Unity to Python via UDP
-
     // Create necessary UdpClient objects
     UdpClient client;
     IPEndPoint remoteEndPoint;
     Thread receiveThread; // Receiving Thread
-
-    IEnumerator SendDataCoroutine() // DELETE THIS: Added to show sending data from Unity to Python via UDP
-    {
-        SendData("just once: " + i.ToString());
-        while (true)
-        {
-            SendData("Sent from Unity: " + i.ToString());
-            i++;
-            yield return new WaitForSeconds(1f);
-        }
-    }
 
     public void SendData(string message) // Use to send data to Python
     {
         try
         {
             byte[] data = Encoding.UTF8.GetBytes(message);
-            client.Send(data, data.Length, remoteEndPoint);
+            client.Send(data, data.Length);
         }
         catch (Exception err)
         {
@@ -64,6 +50,7 @@ public class UdpSocket : MonoBehaviour
 
         // Create local client
         client = new UdpClient(rxPort);
+        client.Connect(remoteEndPoint);
 
         // local endpoint definition (where messages are received)
         // Create a new thread for reception of incoming messages
@@ -72,9 +59,9 @@ public class UdpSocket : MonoBehaviour
         receiveThread.Start();
 
         // Initialize (seen in comments window)
-        print("UDP Comms Initialised");
+        Debug.Log("UDP Comms Initialised");
 
-        StartCoroutine(SendDataCoroutine()); // DELETE THIS: Added to show sending data from Unity to Python via UDP
+        SendData("Hello from Unity!");
     }
 
     // Receive data, update packets received
@@ -87,12 +74,12 @@ public class UdpSocket : MonoBehaviour
                 IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
                 byte[] data = client.Receive(ref anyIP);
                 string text = Encoding.UTF8.GetString(data);
-                print(">> " + text);
+                Debug.Log(">> " + text);
                 ProcessInput(text);
             }
             catch (Exception err)
             {
-                print(err.ToString());
+                Debug.Log(err.ToString());
             }
         }
     }

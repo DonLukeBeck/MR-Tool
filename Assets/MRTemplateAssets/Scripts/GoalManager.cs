@@ -115,11 +115,12 @@ public class GoalManager : MonoBehaviour
     [SerializeField]
     ARPlaneManager m_ARPlaneManager;
 
-    private Vector3 m_TargetOffset = new Vector3(0f, -.25f, 1.5f);
+    [SerializeField]
+    UdpSocket WebSocket;
 
+    private Vector3 m_TargetOffset = new Vector3(0f, -.25f, 1.5f);
     private int k_step = 0;
     private float k_children = 0;
-
     private List<GameObject> m_Child = new List<GameObject>();
 
     void Start()
@@ -263,16 +264,13 @@ public class GoalManager : MonoBehaviour
         // Convert to byte array
         byte[] bytes = screenshot.EncodeToPNG();
 
-        // Show screenshot
-        //screenshot.SaveAsPNG("screenshot.png");
-
         // Release memory
         Destroy(screenshot);
 
         //
 
         // Send step to server (remove line if dialogue agent has a Vision Language Model and can recognize the step from the image)
-        //SendData("Step " + k_step.ToString());
+        WebSocket.SendData("Step " + k_step.ToString());
     }
 
 

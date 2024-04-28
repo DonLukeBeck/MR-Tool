@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
 
 
@@ -82,7 +81,7 @@ public class DebugPanel : MonoBehaviour
         _dirToPlayer = (this.transform.position - _cameraTransform.position).normalized;
         _dirToPlayer.y = 0; // This ensures rotation only around the Y-axis
         this.transform.rotation = Quaternion.LookRotation( _dirToPlayer );
-
+        
         //Display any queued Debug Log messages...
         if (_queuedMessages.Count > 0)
         {
