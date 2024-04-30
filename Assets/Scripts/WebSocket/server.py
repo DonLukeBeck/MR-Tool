@@ -11,7 +11,7 @@ while True:
     i += 1
     # I am unable to determine your current step, please provide a picture of the model by looking towards it and pressing the "Send Picture" button
     data = sock.ReadReceivedData() # read data
-
+    # print("a")
     if data != None: # if NEW data has been received since last ReadReceivedData function call
         print(data) # print new received data
 

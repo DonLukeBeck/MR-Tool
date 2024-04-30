@@ -261,16 +261,22 @@ public class GoalManager : MonoBehaviour
         // Capture image
         Texture2D screenshot = ScreenCapture.CaptureScreenshotAsTexture();
 
+        byte[] bytes = new byte[1000000];
+
         // Convert to byte array
-        byte[] bytes = screenshot.EncodeToPNG();
+        bytes = screenshot.EncodeToPNG();
 
-        // Release memory
-        Destroy(screenshot);
+        //show bytes length
+        Debug.Log("Bytes length: " + bytes.Length);
 
-        //
+        // Send converted image to server
+        WebSocket.SendPictureData(screenshot.EncodeToPNG());
 
         // Send step to server (remove line if dialogue agent has a Vision Language Model and can recognize the step from the image)
         WebSocket.SendData("Step " + k_step.ToString());
+
+        // Release memory
+        Destroy(screenshot);
     }
 
 

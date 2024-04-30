@@ -5,6 +5,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using UnityEngine.Android;
+using System.Collections;
+using System.Linq;
 
 public class UdpSocket : MonoBehaviour
 {
@@ -18,17 +20,43 @@ public class UdpSocket : MonoBehaviour
     //[SerializeField] int rxPort = 8021; // port to receive data from Python on
     //[SerializeField] int txPort = 8020; // port to send data to Python on
 
+    int i = 0; // DELETE THIS: Added to show sending data from Unity to Python via UDP
+
     // Create necessary UdpClient objects
     UdpClient client;
     IPEndPoint remoteEndPoint;
     Thread receiveThread; // Receiving Thread
+
+    IEnumerator SendDataCoroutine() // DELETE THIS: Added to show sending data from Unity to Python via UDP
+    {
+        while (true)
+        {
+            SendData("Sent from Unity: " + i.ToString());
+            i++;
+            yield return new WaitForSeconds(1f);
+        }
+    }
 
     public void SendData(string message) // Use to send data to Python
     {
         try
         {
             byte[] data = Encoding.UTF8.GetBytes(message);
-            client.Send(data, data.Length);
+            client.Send(data, data.Length, remoteEndPoint);
+        }
+        catch (Exception err)
+        {
+            print(err.ToString());
+        }
+    }
+
+    public void SendPictureData(byte[] data) // Use to send data to Python
+    {
+        try
+        {
+            byte[] bytes = new byte[1000000];
+            bytes = data.ToArray();
+            client.Send(data, data.Length, remoteEndPoint);
         }
         catch (Exception err)
         {
@@ -50,7 +78,6 @@ public class UdpSocket : MonoBehaviour
 
         // Create local client
         client = new UdpClient(rxPort);
-        client.Connect(remoteEndPoint);
 
         // local endpoint definition (where messages are received)
         // Create a new thread for reception of incoming messages
@@ -62,6 +89,8 @@ public class UdpSocket : MonoBehaviour
         Debug.Log("UDP Comms Initialised");
 
         SendData("Hello from Unity!");
+        StartCoroutine(SendDataCoroutine()); // DELETE THIS: Added to show sending data from Unity to Python via UDP
+
     }
 
     // Receive data, update packets received
