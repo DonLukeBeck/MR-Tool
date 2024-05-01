@@ -19,5 +19,8 @@ while True:
             sock.SendData("I am unable to determine your current step, please provide a picture of the model by "
                           "looking towards it and pressing the \"Send Picture\" button")  # send response
             print(data)
+        elif data.startswith("Step"):
+            step_number = int(data.split(' ')[1])
+            print(f"Step number: {step_number}")
         else:
             print(data)  # print new received data

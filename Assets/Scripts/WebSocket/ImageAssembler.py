@@ -20,8 +20,8 @@ class ImageAssembler:
         if image_data.startswith("Base64EncodedChunk"):
             # Extract Base64 encoded image data
             base64_data = image_data.split(' ')[1]
-            print(f"Received chunk {self.received_chunks + 1}/{self.total_chunks}")
-            print(base64_data)
+            # print(f"Received chunk {self.received_chunks + 1}/{self.total_chunks}")
+            # print(base64_data)
             # Ensure length is valid for decoding
             if len(base64_data) % 4 != 0:
                 print(len(base64_data))
@@ -46,7 +46,6 @@ class ImageAssembler:
         try:
             # Reconstruct image from byte array
             reconstructed_image = Image.open(BytesIO(image_data))
-
             print("Image reconstructed")
             # Use tempfile to create a temporary file
             with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
