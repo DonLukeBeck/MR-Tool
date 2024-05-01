@@ -5,8 +5,10 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 
-public class ImageAssembler
+public class ImageAssembler : MonoBehaviour
 {
+    [SerializeField] Material quadMaterial; // Object to hold the reconstructed image
+
     private List<byte[]> imageChunks = new List<byte[]>();
     private int totalChunks = 0;
     private int receivedChunks = 0;
@@ -56,18 +58,15 @@ public class ImageAssembler
 
     private void AssembleImage()
     {
-        Debug.Log("Assembling image");
         byte[] imageData = CombineChunks(imageChunks);
-        Debug.Log(imageData.Length);
         Texture2D texture = new Texture2D(1, 1);
         texture.LoadImage(imageData); // Load the image data into the texture
-        Debug.Log(CombineChunks(imageChunks).Length);
-        // Save texture as PNG
-        byte[] pngBytes = texture.EncodeToPNG();
-        string filePath = Path.Combine(Application.persistentDataPath, "reconstructed_image.png");
-        File.WriteAllBytes(filePath, pngBytes);
 
-        Debug.Log($"Image reconstructed and saved to: {filePath}");
+        // Create a new material and assign the texture to it
+        Material material = new Material(Shader.Find("Standard"));
+        material.mainTexture = texture;
+
+        Debug.Log("Image reconstructed and displayed on Quad.");
     }
 
     private byte[] CombineChunks(List<byte[]> chunks)
