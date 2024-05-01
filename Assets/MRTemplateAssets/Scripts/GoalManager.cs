@@ -196,6 +196,8 @@ public class GoalManager : MonoBehaviour
             m_AskQuestionButton.SetActive(true);
             m_SendPictureButton.SetActive(true);
             m_RestartButton.SetActive(true);
+            m_VideoPlayer.SetActive(false);
+            m_VideoPlayerToggle.isOn = false;
 
             // Hide all pieces
             for (int i = 0; i < m_Child.Count; i++)

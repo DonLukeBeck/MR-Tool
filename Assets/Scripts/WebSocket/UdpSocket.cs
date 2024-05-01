@@ -18,6 +18,7 @@ public class UdpSocket : MonoBehaviour
     UdpClient client;
     IPEndPoint remoteEndPoint;
     Thread receiveThread; // Receiving Thread
+    private ImageAssembler imageAssembler;
 
     public void SendData(string message) // Use to send data to Python
     {
@@ -52,6 +53,7 @@ public class UdpSocket : MonoBehaviour
         receiveThread = new Thread(new ThreadStart(ReceiveData));
         receiveThread.IsBackground = true;
         receiveThread.Start();
+        imageAssembler = new ImageAssembler();
     }
 
     // Receive data, update packets received
@@ -80,6 +82,14 @@ public class UdpSocket : MonoBehaviour
         {
             isTxStarted = true;
         }
+
+        //if data starts with "ImageChunks" or "Base64EncodedChunk" process image data
+        if (input.StartsWith("ImageChunks") || input.StartsWith("Base64EncodedChunk"))
+        {
+            imageAssembler.ProcessImageData(input);
+        }
+    
+
     }
 
     //Prevent crashes - close clients and threads
