@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using UnityEngine.Android;
+using TMPro;
 
 public class UdpSocket : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class UdpSocket : MonoBehaviour
     [SerializeField] string IP = "192.168.1.202"; // nginx server (replace with your own server that hosts the dialogue agent)
     [SerializeField] int rxPort = 8021; // port to receive data from Python on
     [SerializeField] int txPort = 8020; // port to send data to Python on
+
+    [SerializeField] public TextMeshProUGUI m_ResponseText;
 
     // Create necessary UdpClient objects
     UdpClient client;
@@ -88,7 +91,28 @@ public class UdpSocket : MonoBehaviour
         {
             imageAssembler.ProcessImageData(input);
         }
-    
+        else if (input.StartsWith("Step"))
+        {
+            // Remove "Step x: " from the start of the string
+            string text = input.Substring(8);
+
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                // Display the text in the UI
+                m_ResponseText.transform.parent.gameObject.SetActive(false);
+                m_ResponseText.text = input;
+                m_ResponseText.transform.parent.gameObject.SetActive(true);
+            });
+        }
+        else if (input.StartsWith("I am unable to determine your current step"))
+        {
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                m_ResponseText.transform.parent.gameObject.SetActive(false);
+                m_ResponseText.text = input;
+                m_ResponseText.transform.parent.gameObject.SetActive(true);
+            });
+        }
 
     }
 

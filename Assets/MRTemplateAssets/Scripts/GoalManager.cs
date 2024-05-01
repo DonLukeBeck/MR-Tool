@@ -83,6 +83,9 @@ public class GoalManager : MonoBehaviour
     GameObject m_VideoPlayer;
 
     [SerializeField]
+    GameObject m_AgentResponse;
+
+    [SerializeField]
     GameObject m_3DModel;
 
     [SerializeField]
@@ -162,6 +165,12 @@ public class GoalManager : MonoBehaviour
 
             if (m_VideoPlayerToggle != null)
                 m_VideoPlayerToggle.isOn = false;
+        }
+
+        // Set agent response
+        if (m_AgentResponse != null)
+        {
+            m_AgentResponse.SetActive(false);
         }
 
         // Set arrow pointer
@@ -262,7 +271,7 @@ public class GoalManager : MonoBehaviour
     {
         // Send question to server
         WebSocket.SendData("Question " + k_step.ToString());
-
+        TurnOnAgentResponse();
     }
 
 
@@ -305,6 +314,9 @@ public class GoalManager : MonoBehaviour
 
         // Release memory
         Destroy(screenshot);
+
+        // Show agent response
+        TurnOnAgentResponse();
     }
 
     // Restart button functionality
@@ -313,6 +325,7 @@ public class GoalManager : MonoBehaviour
         k_step = 0;
 
         // Restore inital interactive menu
+        m_AgentResponse.SetActive(false);
         m_NextStepButtonTextField.text = "Start Assembly";
         m_PreviousStepButton.SetActive(false);
         m_AskQuestionButton.SetActive(false);
@@ -534,6 +547,51 @@ public class GoalManager : MonoBehaviour
 
         m_VideoPlayer.transform.rotation = targetPlayerRotation;
         m_VideoPlayer.SetActive(true);
+        if (follow != null)
+            follow.rotationFollowMode = LazyFollow.RotationFollowMode.LookAtWithWorldUp;
+    }
+
+    void TurnOnAgentResponse()
+    {
+        if (m_AgentResponse.activeSelf)
+            return;
+
+        var follow = m_AgentResponse.GetComponent<LazyFollow>();
+        if (follow != null)
+            follow.rotationFollowMode = LazyFollow.RotationFollowMode.None;
+
+        m_AgentResponse.SetActive(false);
+        var target = Camera.main.transform;
+        var targetRotation = target.rotation;
+        var newTransform = target;
+        var targetEuler = targetRotation.eulerAngles;
+        targetRotation = Quaternion.Euler
+        (
+            0f,
+            targetEuler.y,
+            targetEuler.z
+        );
+
+        newTransform.rotation = targetRotation;
+        var targetPosition = target.position + newTransform.TransformVector(m_TargetOffset);
+        m_AgentResponse.transform.position = targetPosition;
+
+
+        var forward = target.position - m_AgentResponse.transform.position;
+        var targetPlayerRotation = forward.sqrMagnitude > float.Epsilon ? Quaternion.LookRotation(forward, Vector3.up) : Quaternion.identity;
+        targetPlayerRotation *= Quaternion.Euler(new Vector3(0f, 180f, 0f));
+        var targetPlayerEuler = targetPlayerRotation.eulerAngles;
+        var currentEuler = m_AgentResponse.transform.rotation.eulerAngles;
+        targetPlayerRotation = Quaternion.Euler
+        (
+            currentEuler.x,
+            targetPlayerEuler.y,
+            currentEuler.z
+        );
+
+        m_AgentResponse.transform.rotation = targetPlayerRotation;
+
+        m_AgentResponse.SetActive(true);
         if (follow != null)
             follow.rotationFollowMode = LazyFollow.RotationFollowMode.LookAtWithWorldUp;
     }

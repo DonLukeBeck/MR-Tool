@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Threading;
+using UnityEngine.UI;
 
 public class ImageAssembler : MonoBehaviour
 {
-    [SerializeField] Material quadMaterial; // Object to hold the reconstructed image
+    [SerializeField] RawImage rawImage; // Material to hold the reconstructed image
 
     private List<byte[]> imageChunks = new List<byte[]>();
     private int totalChunks = 0;
@@ -52,21 +54,39 @@ public class ImageAssembler : MonoBehaviour
         if (receivedChunks == totalChunks)
         {
             Debug.Log("All image chunks received");
-            AssembleImage();
+            Thread thread = new Thread(AssembleImage);
+            thread.Start();
         }
     }
 
-    private void AssembleImage()
+    void AssembleImage()
     {
-        byte[] imageData = CombineChunks(imageChunks);
-        Texture2D texture = new Texture2D(1, 1);
-        texture.LoadImage(imageData); // Load the image data into the texture
 
-        // Create a new material and assign the texture to it
-        Material material = new Material(Shader.Find("Standard"));
-        material.mainTexture = texture;
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            byte[] imageData = CombineChunks(imageChunks);
+            // Decode the byte image data into a Texture2D
+            Texture2D texture = new Texture2D(1920, 1080);
+            texture.LoadImage(imageData); // Load the byte image data
 
-        Debug.Log("Image reconstructed and displayed on Quad.");
+            //find ui game object
+            if (rawImage == null)
+            {
+                rawImage = GameObject.Find("RawImage").GetComponent<RawImage>();
+            }
+
+            //is raw image null
+            if (rawImage.texture == null)
+            {
+                Debug.Log("Raw image is null");
+            }
+
+            Debug.Log($"Image loaded from {imageData.Length} bytes of data");
+          
+            rawImage.texture = texture;
+
+            Debug.Log("Image reconstructed and displayed on Quad.");
+        });
     }
 
     private byte[] CombineChunks(List<byte[]> chunks)

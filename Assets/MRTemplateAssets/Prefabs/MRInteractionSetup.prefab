@@ -461,6 +461,7 @@ MonoBehaviour:
   m_FadeMaterial: {fileID: 0}
   m_GoalPanelLazyFollow: {fileID: 0}
   m_VideoPlayer: {fileID: 0}
+  m_AgentResponse: {fileID: 0}
   m_3DModel: {fileID: 0}
   m_3DModelPieces: {fileID: 0}
   m_progressBar: {fileID: 0}
