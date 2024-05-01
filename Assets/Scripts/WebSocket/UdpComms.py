@@ -3,9 +3,10 @@ class UdpComms():
         """
         Constructor
         :param udpIP: Must be string e.g. "127.0.0.1"
-        :param portTX: integer number e.g. 8000. Port to transmit from i.e From Python to other application
-        :param portRX: integer number e.g. 8001. Port to receive on i.e. From other application to Python
-        :param enableRX: When False you may only send from Python and not receive. If set to True a thread is created to enable receiving of data
+        :param portTX: integer number e.g. 8000. Port to transmit from i.e. From server to application
+        :param portRX: integer number e.g. 8001. Port to receive on i.e. From application to server
+        :param enableRX: When False you may only send from Python and not receive. If set to True a thread is created to
+                         enable receiving of data
         :param suppressWarnings: Stop printing warnings if not connected to other application
         """
 
@@ -21,7 +22,9 @@ class UdpComms():
 
         # Connect via UDP
         self.udpSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # internet protocol, udp (DGRAM) socket
-        self.udpSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # allows the address/port to be reused immediately instead of it being stuck in the TIME_WAIT state waiting for late packets to arrive.
+        # allows the address/port to be reused immediately instead of it being stuck in the TIME_WAIT state waiting
+        # for late packets to arrive.
+        self.udpSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.udpSock.bind((udpIP, portRX))
 
         # Create Receiving thread if required
@@ -56,7 +59,7 @@ class UdpComms():
 
         data = None
         try:
-            data, _ = self.udpSock.recvfrom(1024)
+            data, _ = self.udpSock.recvfrom(262144)
             data = data.decode('utf-8')
         except WindowsError as e:
             if e.winerror == 10054: # An error occurs if you try to receive before connecting to other application

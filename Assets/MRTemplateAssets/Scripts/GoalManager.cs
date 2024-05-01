@@ -25,8 +25,8 @@ public class GoalManager : MonoBehaviour
     public enum OnboardingGoals
     {
         Empty,
-        FindSurfaces,
-        TapSurface,
+        interactiveMenu,
+        interaction,
     }
 
     Queue<Goal> m_OnboardingGoals;
@@ -128,14 +128,14 @@ public class GoalManager : MonoBehaviour
         // Initialize the goals
         m_OnboardingGoals = new Queue<Goal>();
         var welcomeGoal = new Goal(OnboardingGoals.Empty);
-        var findSurfaceGoal = new Goal(OnboardingGoals.FindSurfaces);
-        var tapSurfaceGoal = new Goal(OnboardingGoals.TapSurface);
+        var interactiveMenuGoal = new Goal(OnboardingGoals.interactiveMenu);
+        var interactionGoal = new Goal(OnboardingGoals.interaction);
         var endGoal = new Goal(OnboardingGoals.Empty);
 
         // Add the goals to the queue
         m_OnboardingGoals.Enqueue(welcomeGoal);
-        m_OnboardingGoals.Enqueue(findSurfaceGoal);
-        m_OnboardingGoals.Enqueue(tapSurfaceGoal);
+        m_OnboardingGoals.Enqueue(interactiveMenuGoal);
+        m_OnboardingGoals.Enqueue(interactionGoal);
         m_OnboardingGoals.Enqueue(endGoal);
 
         m_CurrentGoal = m_OnboardingGoals.Dequeue();
@@ -218,9 +218,9 @@ public class GoalManager : MonoBehaviour
         {
             // Color animation for each piece
             Material[] m_Materials = m_Child[k_step].GetComponent<MeshRenderer>().materials;
-            foreach (Material m in m_Materials)
+            foreach (Material material in m_Materials)
             {
-                m.DOColor(Color.red, 3f).From();
+                material.DOColor(Color.red, 3f).From();
             }
 
             // Show next piece
@@ -246,12 +246,21 @@ public class GoalManager : MonoBehaviour
             m_AskQuestionButton.SetActive(false);
             m_SendPictureButton.SetActive(false);
             m_RestartButton.SetActive(false);
+
             // Display model
             for (int i = 0; i < m_Child.Count; i++)
             {
                 m_Child[i].SetActive(true);
             }
         }
+    }
+
+    // Ask question button functionality
+    public void AskQuestion()
+    {
+        // Send question to server
+        WebSocket.SendData("Question " + k_step.ToString());
+
     }
 
 
@@ -261,31 +270,39 @@ public class GoalManager : MonoBehaviour
         // Capture image
         Texture2D screenshot = ScreenCapture.CaptureScreenshotAsTexture();
 
-        byte[] bytes = new byte[1000000];
-
         // Convert to byte array
-        bytes = screenshot.EncodeToPNG();
+        byte[] bytes = screenshot.EncodeToPNG();
 
-        //show bytes length
-        Debug.Log("Bytes length: " + bytes.Length);
+        // Define chunk size
+        int chunkSize = 32768;
 
-        // Send converted image to server
-        WebSocket.SendPictureData(screenshot.EncodeToPNG());
+        // Calculate number of chunks
+        int totalChunks = Mathf.CeilToInt((float)bytes.Length / chunkSize);
+
+        // Send total number of chunks to server
+        WebSocket.SendData("ImageChunks " + totalChunks.ToString());
+
+        // Send chunks to server
+        for (int i = 0; i < totalChunks; i++)
+        {
+            // wait for previous packet to arrive
+            System.Threading.Thread.Sleep(50);
+
+            int offset = i * chunkSize;
+            int length = Mathf.Min(chunkSize, bytes.Length - offset);
+            byte[] chunk = new byte[length];
+            Array.Copy(bytes, offset, chunk, 0, length);
+            string chunkString = Convert.ToBase64String(chunk);
+            //print("Chunk " + i + " of " + totalChunks + " sent");
+            //print("Chunk string" + chunkString);
+            WebSocket.SendData("Base64EncodedChunk " + chunkString);
+        }
 
         // Send step to server (remove line if dialogue agent has a Vision Language Model and can recognize the step from the image)
         WebSocket.SendData("Step " + k_step.ToString());
 
         // Release memory
         Destroy(screenshot);
-    }
-
-
-    // Ask question button functionality
-    public void AskQuestion()
-    {
-        // Send question to server
-        //SendData("Question " + k_step.ToString());
-
     }
 
     // Restart button functionality
@@ -331,10 +348,10 @@ public class GoalManager : MonoBehaviour
                 case OnboardingGoals.Empty:
                     m_GoalPanelLazyFollow.positionFollowMode = LazyFollow.PositionFollowMode.Follow;
                     break;
-                case OnboardingGoals.FindSurfaces:
+                case OnboardingGoals.interactiveMenu:
                     m_GoalPanelLazyFollow.positionFollowMode = LazyFollow.PositionFollowMode.Follow;
                     break;
-                case OnboardingGoals.TapSurface:
+                case OnboardingGoals.interaction:
                     m_GoalPanelLazyFollow.positionFollowMode = LazyFollow.PositionFollowMode.None;
                     break;
             }
@@ -406,13 +423,13 @@ public class GoalManager : MonoBehaviour
         m_OnboardingGoals.Clear();
         m_OnboardingGoals = new Queue<Goal>();
         var welcomeGoal = new Goal(OnboardingGoals.Empty);
-        var findSurfaceGoal = new Goal(OnboardingGoals.FindSurfaces);
-        var tapSurfaceGoal = new Goal(OnboardingGoals.TapSurface);
+        var interactiveMenuGoal = new Goal(OnboardingGoals.interactiveMenu);
+        var interactionGoal = new Goal(OnboardingGoals.interaction);
         var endGoal = new Goal(OnboardingGoals.Empty);
 
         m_OnboardingGoals.Enqueue(welcomeGoal);
-        m_OnboardingGoals.Enqueue(findSurfaceGoal);
-        m_OnboardingGoals.Enqueue(tapSurfaceGoal);
+        m_OnboardingGoals.Enqueue(interactiveMenuGoal);
+        m_OnboardingGoals.Enqueue(interactionGoal);
         m_OnboardingGoals.Enqueue(endGoal);
 
         for (int i = 0; i < m_StepList.Count; i++)

@@ -3191,7 +3191,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8925207555904468295, guid: 66d40221d132d04499855da9ce315f20, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -660
+      value: -1160
       objectReference: {fileID: 0}
     - target: {fileID: 8985790972859853890, guid: 66d40221d132d04499855da9ce315f20, type: 3}
       propertyPath: m_Enabled
@@ -3294,9 +3294,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTxStarted: 0
-  IP: 38.242.140.110
-  rxPort: 8021
-  txPort: 8020
+  IP: 127.0.0.1
+  rxPort: 8000
+  txPort: 8001
 --- !u!4 &1602034543
 Transform:
   m_ObjectHideFlags: 0
@@ -4752,6 +4752,7 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 8495506645477454422, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
     - {fileID: 6175213767407465855, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
+    - {fileID: 1836125610, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
