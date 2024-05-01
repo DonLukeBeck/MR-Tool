@@ -38,11 +38,13 @@ class ImageAssembler:
         # If all chunks received, assemble image
         if self.received_chunks == self.total_chunks:
             self.assemble_image()
+            self.received_chunks = 0
+            self.total_chunks = 0
 
     def assemble_image(self):
         # Concatenate chunks
         image_data = b''.join(self.image_chunks)
-
+        self.image_chunks.clear()
         try:
             # Reconstruct image from byte array
             reconstructed_image = Image.open(BytesIO(image_data))

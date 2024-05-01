@@ -223,6 +223,8 @@ public class GoalManager : MonoBehaviour
         {
             // Show last piece
             m_Child[k_step].SetActive(true);
+            m_AskQuestionButton.SetActive(false);
+            m_SendPictureButton.SetActive(false);
         }
         // Middle steps
         else

@@ -54,6 +54,8 @@ public class ImageAssembler : MonoBehaviour
         if (receivedChunks == totalChunks)
         {
             Debug.Log("All image chunks received");
+            receivedChunks = 0;
+            totalChunks = 0;
             Thread thread = new Thread(AssembleImage);
             thread.Start();
         }
@@ -65,6 +67,7 @@ public class ImageAssembler : MonoBehaviour
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
             byte[] imageData = CombineChunks(imageChunks);
+            imageChunks.Clear();
             // Decode the byte image data into a Texture2D
             Texture2D texture = new Texture2D(1920, 1080);
             texture.LoadImage(imageData); // Load the byte image data
