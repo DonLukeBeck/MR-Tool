@@ -274,7 +274,7 @@ public class GoalManager : MonoBehaviour
         byte[] bytes = screenshot.EncodeToPNG();
 
         // Define chunk size
-        int chunkSize = 32768;
+        int chunkSize = 8192;
 
         // Calculate number of chunks
         int totalChunks = Mathf.CeilToInt((float)bytes.Length / chunkSize);
@@ -286,7 +286,7 @@ public class GoalManager : MonoBehaviour
         for (int i = 0; i < totalChunks; i++)
         {
             // wait for previous packet to arrive
-            System.Threading.Thread.Sleep(50);
+            System.Threading.Thread.Sleep(250);
 
             int offset = i * chunkSize;
             int length = Mathf.Min(chunkSize, bytes.Length - offset);
