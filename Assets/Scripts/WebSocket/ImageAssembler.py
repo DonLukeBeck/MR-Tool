@@ -21,11 +21,19 @@ class ImageAssembler:
             # Extract Base64 encoded image data
             base64_data = image_data.split(' ')[1]
             print(f"Received chunk {self.received_chunks + 1}/{self.total_chunks}")
-
-            # Decode Base64 encoded image data to bytes
-            chunk_data = base64.b64decode(base64_data)
-            self.image_chunks.append(chunk_data)
-            self.received_chunks += 1
+            print(base64_data)
+            # Ensure length is valid for decoding
+            if len(base64_data) % 4 != 0:
+                print(len(base64_data))
+                # Add padding if necessary to make length a multiple of 4
+                base64_data += '=' * (4 - len(base64_data) % 4)
+            try:
+                # Decode Base64 encoded image data to bytes
+                chunk_data = base64.b64decode(base64_data)
+                self.image_chunks.append(chunk_data)
+                self.received_chunks += 1
+            except Exception as e:
+                print(f"Error decoding Base64 data: {e}")
 
         # If all chunks received, assemble image
         if self.received_chunks == self.total_chunks:
@@ -50,4 +58,3 @@ class ImageAssembler:
             reconstructed_image.show()
         except Exception as e:
             print(f"Error reconstructing image: {e}")
-
