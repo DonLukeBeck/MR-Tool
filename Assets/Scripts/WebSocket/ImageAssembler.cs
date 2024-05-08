@@ -78,10 +78,12 @@ public class ImageAssembler : MonoBehaviour
                 rawImage = GameObject.Find("RawImage").GetComponent<RawImage>();
             }
 
-            //is raw image null
+            //set image transparency
             if (rawImage.texture == null)
             {
-                Debug.Log("Raw image is null");
+                var tempColor = rawImage.color;
+                tempColor.a = 255f;
+                rawImage.color = tempColor;
             }
 
             Debug.Log($"Image loaded from {imageData.Length} bytes of data");
