@@ -75,7 +75,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.inputsystem": {
-      "version": "1.8.1",
+      "version": "1.8.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -289,7 +289,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.interaction.toolkit": {
-      "version": "3.0.1",
+      "version": "3.0.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -327,12 +327,14 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.meta-openxr": {
-      "version": "2.0.0-pre.1",
+      "version": "2.0.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.xr.openxr": "1.9.1",
-        "com.unity.xr.arfoundation": "6.0.0-pre.7"
+        "com.unity.xr.openxr": "1.10.0",
+        "com.unity.xr.arfoundation": "6.0.1",
+        "com.unity.xr.management": "4.4.0",
+        "com.unity.xr.core-utils": "2.3.0"
       },
       "url": "https://packages.unity.com"
     },

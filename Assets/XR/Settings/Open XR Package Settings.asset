@@ -1092,7 +1092,7 @@ MonoBehaviour:
   nameUi: 'Meta Quest: Anchors'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-meta-anchor
-  openxrExtensionStrings: XR_FB_spatial_entity
+  openxrExtensionStrings: XR_FB_spatial_entity XR_FB_spatial_entity_storage
   company: Unity Technologies
   priority: 0
   required: 0
