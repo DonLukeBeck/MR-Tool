@@ -125,7 +125,7 @@ public class GoalManager : MonoBehaviour
     private int k_step = 0;
     private float k_children = 0;
     private List<GameObject> m_Child = new List<GameObject>();
-
+    private bool m_isCabin = false;
     void Start()
     {
         // Initialize the goals
