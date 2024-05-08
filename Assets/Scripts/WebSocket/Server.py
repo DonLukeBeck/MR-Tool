@@ -97,7 +97,7 @@ while True:
                 elif step_number == 19:
                     sock.SendData("Step 19: Attach the 2x2 yellow tile with a groove on top of the blue slope")
 
-                image_filename = os.path.join("Images", f"step{step_number}.jpg")
+                image_filename = os.path.join("Images", f"step_{step_number}.jpg")
                 # Send image data over socket in chunks
                 send_image_over_socket_in_chunks(image_filename)
             except Exception as e:
