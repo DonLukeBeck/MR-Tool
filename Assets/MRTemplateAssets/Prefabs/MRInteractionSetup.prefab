@@ -453,6 +453,7 @@ MonoBehaviour:
   m_StepButtonTextField: {fileID: 0}
   m_SkipButton: {fileID: 0}
   m_NextStepButtonTextField: {fileID: 0}
+  m_NextStepButton: {fileID: 0}
   m_PreviousStepButton: {fileID: 0}
   m_AskQuestionButton: {fileID: 0}
   m_SendPictureButton: {fileID: 0}
@@ -461,6 +462,7 @@ MonoBehaviour:
   m_FadeMaterial: {fileID: 0}
   m_GoalPanelLazyFollow: {fileID: 0}
   m_VideoPlayer: {fileID: 0}
+  m_NextVideoButtonTextField: {fileID: 0}
   m_AgentResponse: {fileID: 0}
   m_3DModel: {fileID: 0}
   m_3DModelPieces: {fileID: 0}

@@ -7,6 +7,9 @@ using UnityEngine.XR.ARFoundation;
 using TMPro;
 using DG.Tweening;
 using LazyFollow = UnityEngine.XR.Interaction.Toolkit.UI.LazyFollow;
+using UnityEngine.Video;
+using System.IO;
+using static System.Net.Mime.MediaTypeNames;
 
 public struct Goal
 {
@@ -59,6 +62,9 @@ public class GoalManager : MonoBehaviour
     public TextMeshProUGUI m_NextStepButtonTextField;
 
     [SerializeField]
+    public GameObject m_NextStepButton;
+
+    [SerializeField]
     public GameObject m_PreviousStepButton;
 
     [SerializeField]
@@ -71,40 +77,43 @@ public class GoalManager : MonoBehaviour
     public GameObject m_RestartButton;
 
     [SerializeField]
-    GameObject m_CoachingUIParent;
+    public GameObject m_CoachingUIParent;
 
     [SerializeField]
-    FadeMaterial m_FadeMaterial;
+    public FadeMaterial m_FadeMaterial;
 
     [SerializeField]
-    LazyFollow m_GoalPanelLazyFollow;
+    public LazyFollow m_GoalPanelLazyFollow;
 
     [SerializeField]
-    GameObject m_VideoPlayer;
+    public GameObject m_VideoPlayer;
 
     [SerializeField]
-    GameObject m_AgentResponse;
+    public TextMeshProUGUI m_NextVideoButtonTextField;
 
     [SerializeField]
-    GameObject m_3DModel;
+    public GameObject m_AgentResponse;
 
     [SerializeField]
-    GameObject m_3DModelPieces;
+    public GameObject m_3DModel;
 
     [SerializeField]
-    Scrollbar m_progressBar;
+    public GameObject m_3DModelPieces;
 
     [SerializeField]
-    GameObject m_InteractiveMenu;
+    public Scrollbar m_progressBar;
 
     [SerializeField]
-    GameObject m_LeftHand;
+    public GameObject m_InteractiveMenu;
 
     [SerializeField]
-    GameObject m_RightHand;
+    public GameObject m_LeftHand;
 
     [SerializeField]
-    GameObject m_ModelLocationPointer;
+    public GameObject m_RightHand;
+
+    [SerializeField]
+    public GameObject m_ModelLocationPointer;
 
     [SerializeField]
     Toggle m_VideoPlayerToggle;
@@ -126,6 +135,9 @@ public class GoalManager : MonoBehaviour
     private float k_children = 0;
     private List<GameObject> m_Child = new List<GameObject>();
     private bool m_isCabin = false;
+    private string[] m_videoFiles;
+    private bool m_isFirstVideo = true;
+
     void Start()
     {
         // Initialize the goals
@@ -167,6 +179,9 @@ public class GoalManager : MonoBehaviour
                 m_VideoPlayerToggle.isOn = false;
         }
 
+        m_videoFiles = Directory.GetFiles("Assets/MRTemplateAssets/Videos", "*.mp4");
+        m_NextVideoButtonTextField.text = "Next Video";
+
         // Set agent response
         if (m_AgentResponse != null)
         {
@@ -201,10 +216,10 @@ public class GoalManager : MonoBehaviour
         {
             // Show interactive menu buttons
             m_NextStepButtonTextField.text = "Next Step";
-            m_PreviousStepButton.SetActive(true);
             m_AskQuestionButton.SetActive(true);
             m_SendPictureButton.SetActive(true);
             m_RestartButton.SetActive(true);
+            m_PreviousStepButton.SetActive(false);
             m_VideoPlayer.SetActive(false);
             m_VideoPlayerToggle.isOn = false;
 
@@ -225,10 +240,13 @@ public class GoalManager : MonoBehaviour
             m_Child[k_step].SetActive(true);
             m_AskQuestionButton.SetActive(false);
             m_SendPictureButton.SetActive(false);
+            m_NextStepButton.SetActive(false);
         }
         // Middle steps
         else
         {
+            m_PreviousStepButton.SetActive(true);
+
             // Color animation for each piece
             Material[] m_Materials = m_Child[k_step].GetComponent<MeshRenderer>().materials;
             foreach (Material material in m_Materials)
@@ -248,6 +266,11 @@ public class GoalManager : MonoBehaviour
         // Middle steps
         if (k_step > 0)
         {
+            //let user interact with dialogue agent
+            m_AskQuestionButton.SetActive(true);
+            m_SendPictureButton.SetActive(true);
+            m_NextStepButton.SetActive(true);
+
             m_Child[k_step].SetActive(false);
             k_step--;
         }
@@ -338,6 +361,28 @@ public class GoalManager : MonoBehaviour
         {
             m_Child[i].SetActive(true);
         }
+    }
+
+    // Next Video button functionality
+    public void NextVideo()
+    {
+        VideoPlayer videoPlayer = GameObject.Find("Video Player").GetComponent<VideoPlayer>(); ;
+
+
+        // Load and play the video
+        if (m_isFirstVideo)
+        {
+            m_NextVideoButtonTextField.text = "Previous Video";
+            videoPlayer.url = m_videoFiles[1];
+            videoPlayer.Play();
+            m_isFirstVideo = false;
+        }else {
+            m_NextVideoButtonTextField.text = "Next Video";
+            videoPlayer.url = m_videoFiles[0];
+            videoPlayer.Play();
+            m_isFirstVideo = true;
+        }
+
     }
 
     void Update()
