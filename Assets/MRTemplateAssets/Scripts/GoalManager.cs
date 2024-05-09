@@ -162,14 +162,6 @@ public class GoalManager : MonoBehaviour
         m_SendPictureButton.SetActive(false);
         m_RestartButton.SetActive(false);
 
-        // Add children to the list
-        foreach (Transform child in m_3DModelPieces.transform)
-        {
-            m_Child.Add(child.gameObject);
-        }
-
-        k_children = m_Child.Count;
-
         // Set video player
         if (m_VideoPlayer != null)
         {
@@ -179,6 +171,7 @@ public class GoalManager : MonoBehaviour
                 m_VideoPlayerToggle.isOn = false;
         }
 
+        // Set tutorial video
         m_videoFiles = Directory.GetFiles("Assets/MRTemplateAssets/Videos", "*.mp4");
         m_NextVideoButtonTextField.text = "Next Video";
 
@@ -385,6 +378,23 @@ public class GoalManager : MonoBehaviour
 
     }
 
+    public void SetModel1()
+    {
+        m_3DModel = GameObject.Find("Lego Dump Truck");
+        m_3DModelPieces = GameObject.Find("Lego Dump Truck Bricks");
+        GameObject.Find("Model Selection").SetActive(false);
+        GameObject.Find("Lego Truck Cabin").SetActive(false);
+    }
+
+    public void SetModel2()
+    {
+        m_3DModel = GameObject.Find("Lego Truck Cabin");
+        m_3DModelPieces = GameObject.Find("Lego Truck Cabin Bricks");
+        GameObject.Find("Lego Dump Truck").SetActive(false);
+        GameObject.Find("Model Selection").SetActive(false);
+        m_isCabin = true;
+    }
+
     void Update()
     {
         if (!m_AllGoalsFinished)
@@ -454,6 +464,14 @@ public class GoalManager : MonoBehaviour
         // Show 3D Model
         if (m_3DModel != null)
             m_3DModel.SetActive(true);
+
+        // Add children to the list
+        foreach (Transform child in m_3DModelPieces.transform)
+        {
+            m_Child.Add(child.gameObject);
+        }
+
+        k_children = m_Child.Count;
 
         // Show Interactive Menu  
         if (m_InteractiveMenu != null)
