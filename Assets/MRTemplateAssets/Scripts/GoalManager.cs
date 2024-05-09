@@ -9,7 +9,6 @@ using DG.Tweening;
 using LazyFollow = UnityEngine.XR.Interaction.Toolkit.UI.LazyFollow;
 using UnityEngine.Video;
 using System.IO;
-using static System.Net.Mime.MediaTypeNames;
 
 public struct Goal
 {
@@ -199,6 +198,7 @@ public class GoalManager : MonoBehaviour
                 m_PassthroughToggle.isOn = false;
         }
 
+        m_CoachingUIParent.SetActive(false);
     }
 
     // Next step button functioanlity
@@ -384,6 +384,7 @@ public class GoalManager : MonoBehaviour
         m_3DModelPieces = GameObject.Find("Lego Dump Truck Bricks");
         GameObject.Find("Model Selection").SetActive(false);
         GameObject.Find("Lego Truck Cabin").SetActive(false);
+        m_CoachingUIParent.SetActive(true);
     }
 
     public void SetModel2()
@@ -393,6 +394,7 @@ public class GoalManager : MonoBehaviour
         GameObject.Find("Lego Dump Truck").SetActive(false);
         GameObject.Find("Model Selection").SetActive(false);
         m_isCabin = true;
+        m_CoachingUIParent.SetActive(true);
     }
 
     void Update()
