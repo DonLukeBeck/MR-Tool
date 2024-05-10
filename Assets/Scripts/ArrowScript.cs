@@ -14,7 +14,10 @@ public class ArrowScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //arrow pointing to 3D Model
-        arrow.transform.LookAt(target.transform.position);
+        if(target == GameObject.Find("Lego Dump Truck"))
+            //arrow pointing to 3D Model
+            arrow.transform.LookAt(target.transform.position);
+        else
+            arrow.transform.LookAt(GameObject.Find("Lego Truck Cabin").transform.position);
     }
 }
