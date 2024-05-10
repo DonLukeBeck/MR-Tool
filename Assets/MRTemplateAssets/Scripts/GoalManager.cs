@@ -232,8 +232,6 @@ public class GoalManager : MonoBehaviour
             // Show last piece
             m_Child[k_step].SetActive(true);
             k_step++;
-            //m_AskQuestionButton.SetActive(false);
-            //m_SendPictureButton.SetActive(false);
             m_NextStepButton.SetActive(false);
         }
         // Middle steps
@@ -252,7 +250,7 @@ public class GoalManager : MonoBehaviour
             m_Child[k_step].SetActive(true);
             k_step++;
         }
-        print("Current Step" + k_step);
+        //print("Current Step" + k_step);
     }
 
     // Previous step button functionality
@@ -284,7 +282,7 @@ public class GoalManager : MonoBehaviour
                 m_Child[i].SetActive(true);
             }
         }
-        print("Current Step" + k_step);
+        //print("Current Step" + k_step);
     }
 
     // Ask question button functionality
@@ -334,10 +332,10 @@ public class GoalManager : MonoBehaviour
         if (m_isCabin)
         {
             WebSocket.SendData("Step " + k_step.ToString() + " Model 2");
-            print("Step sent " + k_step);
+            //print("Step sent " + k_step);
         } else {
             WebSocket.SendData("Step " + k_step.ToString() + " Model 1");
-            print("Step sent " + k_step);
+            //print("Step sent " + k_step);
         }
 
         // Release memory
