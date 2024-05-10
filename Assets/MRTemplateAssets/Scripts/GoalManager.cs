@@ -231,8 +231,9 @@ public class GoalManager : MonoBehaviour
         {
             // Show last piece
             m_Child[k_step].SetActive(true);
-            m_AskQuestionButton.SetActive(false);
-            m_SendPictureButton.SetActive(false);
+            k_step++;
+            //m_AskQuestionButton.SetActive(false);
+            //m_SendPictureButton.SetActive(false);
             m_NextStepButton.SetActive(false);
         }
         // Middle steps
@@ -251,6 +252,7 @@ public class GoalManager : MonoBehaviour
             m_Child[k_step].SetActive(true);
             k_step++;
         }
+        print("Current Step" + k_step);
     }
 
     // Previous step button functionality
@@ -263,9 +265,9 @@ public class GoalManager : MonoBehaviour
             m_AskQuestionButton.SetActive(true);
             m_SendPictureButton.SetActive(true);
             m_NextStepButton.SetActive(true);
-
-            m_Child[k_step].SetActive(false);
             k_step--;
+            m_Child[k_step].SetActive(false);
+
         }
         // First step
         else {
@@ -282,6 +284,7 @@ public class GoalManager : MonoBehaviour
                 m_Child[i].SetActive(true);
             }
         }
+        print("Current Step" + k_step);
     }
 
     // Ask question button functionality
@@ -327,8 +330,15 @@ public class GoalManager : MonoBehaviour
             WebSocket.SendData("Base64EncodedChunk " + chunkString);
         }
 
-        // Send step to server (remove line if dialogue agent has a Vision Language Model and can recognize the step from the image)
-        WebSocket.SendData("Step " + k_step.ToString());
+        // Send step and model to server (remove lines if dialogue agent has a Vision Language Model and can recognize the step from the image)
+        if (m_isCabin)
+        {
+            WebSocket.SendData("Step " + k_step.ToString() + " Model 2");
+            print("Step sent " + k_step);
+        } else {
+            WebSocket.SendData("Step " + k_step.ToString() + " Model 1");
+            print("Step sent " + k_step);
+        }
 
         // Release memory
         Destroy(screenshot);

@@ -69,7 +69,7 @@ public class UdpSocket : MonoBehaviour
                 IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
                 byte[] data = client.Receive(ref anyIP);
                 string text = Encoding.UTF8.GetString(data);
-                print(">> " + text);
+                //print(">> " + text);
                 ProcessInput(text);
             }
             catch (Exception err)
@@ -95,7 +95,7 @@ public class UdpSocket : MonoBehaviour
         {
             // Remove "Step x: " from the start of the string
             string text = input.Substring(8);
-
+            //print("Step Received" + text);
             UnityMainThreadDispatcher.Instance().Enqueue(() =>
             {
                 // Display the text in the UI
