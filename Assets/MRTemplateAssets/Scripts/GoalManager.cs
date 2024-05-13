@@ -88,6 +88,18 @@ public class GoalManager : MonoBehaviour
     public GameObject m_VideoPlayer;
 
     [SerializeField]
+    public GameObject m_VideoPlayerPoke;
+
+    [SerializeField]
+    public GameObject m_VideoPlayerPinch;
+
+    [SerializeField]
+    public GameObject m_QuadPinch;
+
+    [SerializeField]
+    public GameObject m_QuadPoke;
+
+    [SerializeField]
     public TextMeshProUGUI m_NextVideoButtonTextField;
 
     [SerializeField]
@@ -134,7 +146,6 @@ public class GoalManager : MonoBehaviour
     private float k_children = 0;
     private List<GameObject> m_Child = new List<GameObject>();
     private bool m_isCabin = false;
-    private string[] m_videoFiles;
     private bool m_isFirstVideo = true;
 
     void Start()
@@ -171,8 +182,9 @@ public class GoalManager : MonoBehaviour
         }
 
         // Set tutorial video
-        m_videoFiles = Directory.GetFiles("Assets/MRTemplateAssets/Videos", "*.mp4");
         m_NextVideoButtonTextField.text = "Next Video";
+        m_VideoPlayerPinch.SetActive(true);
+        m_VideoPlayerPoke.SetActive(false);
 
         // Set agent response
         if (m_AgentResponse != null)
@@ -368,20 +380,31 @@ public class GoalManager : MonoBehaviour
     // Next Video button functionality
     public void NextVideo()
     {
-        VideoPlayer videoPlayer = GameObject.Find("Video Player").GetComponent<VideoPlayer>(); ;
-
+        VideoPlayer videoPlayerPinch = m_VideoPlayerPinch.GetComponent<VideoPlayer>();
+        VideoPlayer videoPlayerPoke = m_VideoPlayerPoke.GetComponent<VideoPlayer>();
 
         // Load and play the video
         if (m_isFirstVideo)
         {
+            m_VideoPlayerPinch.SetActive(false);
+            videoPlayerPinch.enabled = true;
+            m_VideoPlayerPoke.SetActive(true);
+            m_QuadPinch.SetActive(false);
+            m_QuadPoke.SetActive(true);
             m_NextVideoButtonTextField.text = "Previous Video";
-            videoPlayer.url = m_videoFiles[1];
-            videoPlayer.Play();
+            videoPlayerPoke.enabled = true;
+            videoPlayerPoke.Play();
             m_isFirstVideo = false;
         }else {
+            m_VideoPlayerPoke.SetActive(false);
+            videoPlayerPoke.enabled = false;
+            videoPlayerPoke.Stop();
+            m_QuadPinch.SetActive(true);
+            m_QuadPoke.SetActive(false);
+            m_VideoPlayerPinch.SetActive(true);
+            videoPlayerPinch.enabled = true;
             m_NextVideoButtonTextField.text = "Next Video";
-            videoPlayer.url = m_videoFiles[0];
-            videoPlayer.Play();
+            videoPlayerPinch.Play();
             m_isFirstVideo = true;
         }
 

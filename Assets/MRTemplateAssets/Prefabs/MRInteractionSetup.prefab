@@ -462,6 +462,10 @@ MonoBehaviour:
   m_FadeMaterial: {fileID: 0}
   m_GoalPanelLazyFollow: {fileID: 0}
   m_VideoPlayer: {fileID: 0}
+  m_VideoPlayerPoke: {fileID: 0}
+  m_VideoPlayerPinch: {fileID: 0}
+  m_QuadPinch: {fileID: 0}
+  m_QuadPoke: {fileID: 0}
   m_NextVideoButtonTextField: {fileID: 0}
   m_AgentResponse: {fileID: 0}
   m_3DModel: {fileID: 0}
