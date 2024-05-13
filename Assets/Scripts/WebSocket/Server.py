@@ -140,11 +140,11 @@ while True:
                     elif step_number == 13:
                         sock.SendData("Step 13: Add a 1x2 guided yellow plate on top of the black plate")
                     elif step_number == 14:
-                        sock.SendData("Step 14: Add the yellow 2x4 arched car fender in front of the model")
+                        sock.SendData("Step 14: Add the yellow 2x4 arched car fender on the other side of the model")
                     elif step_number == 15:
-                        sock.SendData("Step 15: Attach the yellow corner plate on top of the black plate")
+                        sock.SendData("Step 15: Attach the yellow corner plate on top of the arched car fender")
                     elif step_number == 16:
-                        sock.SendData("Step 16: Add a 1x2 yellow plate near the yellow corner plate")
+                        sock.SendData("Step 16: Add a 1x2 yellow plate behind the yellow corner plate")
                     elif step_number == 17:
                         sock.SendData("Step 17: Attach the 2x2 yellow plate on top of the yellow corner plate and the "
                                       "1x2 yellow plate")
