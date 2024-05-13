@@ -231,8 +231,8 @@ public class GoalManager : MonoBehaviour
         {
             // Show last piece
             m_Child[k_step].SetActive(true);
-            k_step++;
             m_NextStepButton.SetActive(false);
+            k_step++;
         }
         // Middle steps
         else
@@ -352,6 +352,7 @@ public class GoalManager : MonoBehaviour
 
         // Restore inital interactive menu
         m_AgentResponse.SetActive(false);
+        m_NextStepButton.SetActive(true);
         m_NextStepButtonTextField.text = "Start Assembly";
         m_PreviousStepButton.SetActive(false);
         m_AskQuestionButton.SetActive(false);

@@ -11704,8 +11704,12 @@ PrefabInstance:
       value: 1801810542
       objectReference: {fileID: 0}
     - target: {fileID: 1467003472333817008, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 350
+      objectReference: {fileID: 0}
+    - target: {fileID: 1467003472333817008, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 300
+      value: 281
       objectReference: {fileID: 0}
     - target: {fileID: 1467003472333817008, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -11939,6 +11943,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -265
       objectReference: {fileID: 0}
+    - target: {fileID: 2681856578081579284, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2681856578081579284, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2681856578081579284, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2681856578081579284, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 29.6
+      objectReference: {fileID: 0}
     - target: {fileID: 2681856578081579285, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 0
@@ -12054,6 +12074,22 @@ PrefabInstance:
     - target: {fileID: 3719140713114475334, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: GoalManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3719140713114475335, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3719140713114475335, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3719140713114475335, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3719140713114475335, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 31.4
       objectReference: {fileID: 0}
     - target: {fileID: 4017622222120634348, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
       propertyPath: m_SizeDelta.y
@@ -12229,7 +12265,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7474997486798861589, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -625
+      value: -702.7
       objectReference: {fileID: 0}
     - target: {fileID: 7474997486798861590, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
       propertyPath: m_Name
@@ -12317,7 +12353,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8148790750632218438, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -535
+      value: -572.7
       objectReference: {fileID: 0}
     - target: {fileID: 8907871878788963904, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
       propertyPath: m_Name
@@ -12338,6 +12374,10 @@ PrefabInstance:
     - target: {fileID: 8944009252260721806, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
       propertyPath: m_Name
       value: Passthrough Toggle
+      objectReference: {fileID: 0}
+    - target: {fileID: 8944009252260721806, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8944009252992386648, guid: 0c051237099f6b54ab5a10a370f91fb0, type: 3}
       propertyPath: m_fontSize
