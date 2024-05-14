@@ -124,7 +124,13 @@ public class GoalManager : MonoBehaviour
     public GameObject m_3DModelPieces;
 
     [SerializeField]
-    public Scrollbar m_progressBar;
+    public GameObject m_ProgressBar;
+
+    [SerializeField]
+    public Slider m_ProgressBarSlider;
+
+    [SerializeField]
+    public TextMeshProUGUI m_ProgressText;
 
     [SerializeField]
     public GameObject m_InteractiveMenu;
@@ -140,6 +146,9 @@ public class GoalManager : MonoBehaviour
 
     [SerializeField]
     Toggle m_VideoPlayerToggle;
+
+    [SerializeField]
+    Toggle m_ProgressBarToggle;
 
     [SerializeField]
     Toggle m_ModelLocationPointerToggle;
@@ -224,6 +233,7 @@ public class GoalManager : MonoBehaviour
         }
 
         m_CoachingUIParent.SetActive(false);
+        m_QuadPoke.SetActive(false);
     }
 
     // Next step button functioanlity
@@ -234,6 +244,7 @@ public class GoalManager : MonoBehaviour
         {
             // Show interactive menu buttons
             m_NextStepButtonTextField.text = "Next Step";
+            TurnOnProgressBar();
             m_AskQuestionButton.SetActive(true);
             m_SendPictureButton.SetActive(true);
             m_RestartButton.SetActive(true);
@@ -275,14 +286,17 @@ public class GoalManager : MonoBehaviour
             m_Child[k_step].SetActive(true);
             k_step++;
         }
-        //print("Current Step" + k_step);
+        // Update the progress bar
+        m_ProgressBarSlider.value = k_step;
+        UpdateProgressText();
+        print("Current Step" + k_step);
     }
 
     // Previous step button functionality
     public void PreviousStep()
     {
         // Middle steps
-        if (k_step > 0)
+        if (k_step > 1)
         {
             //let user interact with dialogue agent
             m_AskQuestionButton.SetActive(true);
@@ -290,7 +304,6 @@ public class GoalManager : MonoBehaviour
             m_NextStepButton.SetActive(true);
             k_step--;
             m_Child[k_step].SetActive(false);
-
         }
         // First step
         else {
@@ -306,7 +319,11 @@ public class GoalManager : MonoBehaviour
             {
                 m_Child[i].SetActive(true);
             }
+            k_step--;
         }
+        // Update the progress bar
+        m_ProgressBarSlider.value = k_step;
+        UpdateProgressText();
         //print("Current Step" + k_step);
     }
 
@@ -388,6 +405,10 @@ public class GoalManager : MonoBehaviour
         {
             m_Child[i].SetActive(true);
         }
+
+        // Update the progress bar
+        m_ProgressBarSlider.value = k_step;
+        UpdateProgressText();
     }
 
     // Next Video button functionality
@@ -528,12 +549,23 @@ public class GoalManager : MonoBehaviour
 
         k_children = m_Child.Count;
 
+        // Initialize the progress bar
+        m_ProgressBarSlider.minValue = 0;
+        m_ProgressBarSlider.maxValue = k_children;
+        m_ProgressBarSlider.value = k_step;
+
+        // Initialize the progress text
+        UpdateProgressText();
+
         // Show Interactive Menu  
         if (m_InteractiveMenu != null)
             m_InteractiveMenu.SetActive(true);
 
         if (m_VideoPlayerToggle != null)
             m_VideoPlayerToggle.isOn = true;
+
+        if (m_ProgressBarToggle != null)
+            m_ProgressBarToggle.isOn = false;
 
         // Toggle passthrough off
         if (m_FadeMaterial != null)
@@ -548,6 +580,17 @@ public class GoalManager : MonoBehaviour
 
             if (m_PassthroughToggle != null)
                 m_PassthroughToggle.isOn = true;
+        }
+    }
+
+    private void UpdateProgressText()
+    {
+        if (k_step == 0)
+        {
+            m_ProgressText.text = "0%";
+        } else {
+            float progressPercentage = ((float)k_step / (float)(k_children)) * 100f;
+            m_ProgressText.text = progressPercentage.ToString("F0") + "%";
         }
     }
 
@@ -596,6 +639,19 @@ public class GoalManager : MonoBehaviour
         else
         {
             m_VideoPlayer.SetActive(false);
+        }
+    }
+
+    public void ToggleProgressBar(bool visibility)
+    {
+        print("bbb");
+        if (visibility)
+        {
+            TurnOnProgressBar();
+        }
+        else
+        {
+            m_ProgressBar.SetActive(false);
         }
     }
 
@@ -669,6 +725,53 @@ public class GoalManager : MonoBehaviour
         m_VideoPlayer.SetActive(true);
         if (follow != null)
             follow.rotationFollowMode = LazyFollow.RotationFollowMode.LookAtWithWorldUp;
+    }
+
+    void TurnOnProgressBar()
+    {
+        Vector3 m_TargetOffsetBar = new Vector3(0f, 0.75f, 1.5f);
+
+        if (m_ProgressBar.activeSelf)
+            return;
+
+        var follow = m_ProgressBar.GetComponent<LazyFollow>();
+        if (follow != null)
+            follow.rotationFollowMode = LazyFollow.RotationFollowMode.None;
+
+        //m_ProgressBar.SetActive(false);
+        var target = Camera.main.transform;
+        var targetRotation = target.rotation;
+        var newTransform = target;
+        var targetEuler = targetRotation.eulerAngles;
+        targetRotation = Quaternion.Euler
+        (
+            0f,
+            targetEuler.y,
+            targetEuler.z
+        );
+
+        newTransform.rotation = targetRotation;
+        var targetPosition = target.position + newTransform.TransformVector(m_TargetOffsetBar); ;
+        m_ProgressBar.transform.position = targetPosition;
+
+
+        var forward = target.position - m_ProgressBar.transform.position;
+        var targetPlayerRotation = forward.sqrMagnitude > float.Epsilon ? Quaternion.LookRotation(forward, Vector3.up) : Quaternion.identity;
+        targetPlayerRotation *= Quaternion.Euler(new Vector3(0f, 180f, 0f));
+        var targetPlayerEuler = targetPlayerRotation.eulerAngles;
+        var currentEuler = m_ProgressBar.transform.rotation.eulerAngles;
+        targetPlayerRotation = Quaternion.Euler
+        (
+            currentEuler.x,
+            targetPlayerEuler.y,
+            currentEuler.z
+        );
+
+        m_ProgressBar.transform.rotation = targetPlayerRotation;
+        m_ProgressBar.SetActive(true);
+        if (follow != null)
+            follow.rotationFollowMode = LazyFollow.RotationFollowMode.LookAtWithWorldUp;
+        m_ProgressBarToggle.isOn = true;
     }
 
     void TurnOnAgentResponse()

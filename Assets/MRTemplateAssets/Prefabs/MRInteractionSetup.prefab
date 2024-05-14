@@ -474,12 +474,15 @@ MonoBehaviour:
   m_AgentResponse: {fileID: 0}
   m_3DModel: {fileID: 0}
   m_3DModelPieces: {fileID: 0}
-  m_progressBar: {fileID: 0}
+  m_ProgressBar: {fileID: 0}
+  m_ProgressBarSlider: {fileID: 0}
+  m_ProgressText: {fileID: 0}
   m_InteractiveMenu: {fileID: 0}
   m_LeftHand: {fileID: 0}
   m_RightHand: {fileID: 0}
   m_ModelLocationPointer: {fileID: 0}
   m_VideoPlayerToggle: {fileID: 0}
+  m_ProgressBarToggle: {fileID: 0}
   m_ModelLocationPointerToggle: {fileID: 0}
   m_PassthroughToggle: {fileID: 0}
   m_ARPlaneManager: {fileID: 2074947109}
