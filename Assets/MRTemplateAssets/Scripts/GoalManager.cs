@@ -100,6 +100,18 @@ public class GoalManager : MonoBehaviour
     public GameObject m_QuadPoke;
 
     [SerializeField]
+    public GameObject m_PlayPinch;
+
+    [SerializeField]
+    public GameObject m_PlayPoke;
+
+    [SerializeField]
+    public GameObject m_SliderPinch;
+
+    [SerializeField]
+    public GameObject m_SliderPoke;
+
+    [SerializeField]
     public TextMeshProUGUI m_NextVideoButtonTextField;
 
     [SerializeField]
@@ -183,8 +195,9 @@ public class GoalManager : MonoBehaviour
 
         // Set tutorial video
         m_NextVideoButtonTextField.text = "Next Video";
-        m_VideoPlayerPinch.SetActive(true);
         m_VideoPlayerPoke.SetActive(false);
+        m_PlayPoke.SetActive(false);
+        m_SliderPoke.SetActive(false);
 
         // Set agent response
         if (m_AgentResponse != null)
@@ -391,6 +404,10 @@ public class GoalManager : MonoBehaviour
             m_VideoPlayerPoke.SetActive(true);
             m_QuadPinch.SetActive(false);
             m_QuadPoke.SetActive(true);
+            m_PlayPinch.SetActive(false);
+            m_PlayPoke.SetActive(true);
+            m_SliderPinch.SetActive(false);
+            m_SliderPoke.SetActive(true);
             m_NextVideoButtonTextField.text = "Previous Video";
             videoPlayerPoke.enabled = true;
             videoPlayerPoke.Play();
@@ -401,6 +418,10 @@ public class GoalManager : MonoBehaviour
             videoPlayerPoke.Stop();
             m_QuadPinch.SetActive(true);
             m_QuadPoke.SetActive(false);
+            m_PlayPinch.SetActive(true);
+            m_PlayPoke.SetActive(false);
+            m_SliderPinch.SetActive(true);
+            m_SliderPoke.SetActive(false);
             m_VideoPlayerPinch.SetActive(true);
             videoPlayerPinch.enabled = true;
             m_NextVideoButtonTextField.text = "Next Video";

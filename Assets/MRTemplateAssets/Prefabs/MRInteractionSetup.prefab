@@ -466,6 +466,10 @@ MonoBehaviour:
   m_VideoPlayerPinch: {fileID: 0}
   m_QuadPinch: {fileID: 0}
   m_QuadPoke: {fileID: 0}
+  m_PlayPinch: {fileID: 0}
+  m_PlayPoke: {fileID: 0}
+  m_SliderPinch: {fileID: 0}
+  m_SliderPoke: {fileID: 0}
   m_NextVideoButtonTextField: {fileID: 0}
   m_AgentResponse: {fileID: 0}
   m_3DModel: {fileID: 0}
