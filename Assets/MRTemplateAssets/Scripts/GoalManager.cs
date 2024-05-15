@@ -8,7 +8,6 @@ using TMPro;
 using DG.Tweening;
 using LazyFollow = UnityEngine.XR.Interaction.Toolkit.UI.LazyFollow;
 using UnityEngine.Video;
-using System.IO;
 
 public struct Goal
 {
@@ -131,6 +130,9 @@ public class GoalManager : MonoBehaviour
 
     [SerializeField]
     public TextMeshProUGUI m_ProgressText;
+    
+    [SerializeField]
+    public TextMeshProUGUI m_AskQuestionText;
 
     [SerializeField]
     public GameObject m_InteractiveMenu;
@@ -159,15 +161,29 @@ public class GoalManager : MonoBehaviour
     [SerializeField]
     ARPlaneManager m_ARPlaneManager;
 
+    [SerializeField] 
+    TMP_Dropdown m_deviceDropdown;
+
     [SerializeField]
     UdpSocket WebSocket;
 
+    [SerializeField]
+    RunWhisper runWhisper;
+
     private Vector3 m_TargetOffset = new Vector3(0f, -.25f, 1.5f);
+    // lego bricks data
     private int k_step = 0;
     private float k_children = 0;
     private List<GameObject> m_Child = new List<GameObject>();
+    // model type
     private bool m_isCabin = false;
+    // tutorial video
     private bool m_isFirstVideo = true;
+    // speech to text variables
+    private AudioClip m_clip;
+    private string m_deviceName;
+    private bool m_recording = false;
+    public string outputString = "";
 
     void Start()
     {
@@ -192,6 +208,16 @@ public class GoalManager : MonoBehaviour
         m_AskQuestionButton.SetActive(false);
         m_SendPictureButton.SetActive(false);
         m_RestartButton.SetActive(false);
+
+        // Select the microphone device (by default the first one) but
+        // also populate the dropdown with all available devices
+        m_deviceName = Microphone.devices[0];
+        foreach (var device in Microphone.devices)
+        {
+            m_deviceDropdown.options.Add(new TMP_Dropdown.OptionData(device));
+        }
+        m_deviceDropdown.value = 0;
+        m_deviceDropdown.onValueChanged.AddListener(OnDeviceChanged);
 
         // Set video player
         if (m_VideoPlayer != null)
@@ -234,6 +260,12 @@ public class GoalManager : MonoBehaviour
 
         m_CoachingUIParent.SetActive(false);
         m_QuadPoke.SetActive(false);
+    }
+
+    // called when the user selects a different device from the dropdown
+    private void OnDeviceChanged(int index)
+    {
+        m_deviceName = Microphone.devices[index];
     }
 
     // Next step button functioanlity
@@ -330,9 +362,37 @@ public class GoalManager : MonoBehaviour
     // Ask question button functionality
     public void AskQuestion()
     {
-        // Send question to server
-        WebSocket.SendData("Question " + k_step.ToString());
-        TurnOnAgentResponse();
+
+        if (!m_recording)
+        {
+            StartRecording();
+            m_AskQuestionText.text = "Stop Recording";
+        }
+        else
+        {
+            StopRecording();
+        }
+    }
+
+    private void StartRecording()
+    {
+        m_clip = Microphone.Start(m_deviceName, false, 10, 16000);
+        m_recording = true;
+    }
+
+    private void StopRecording()
+    {
+        m_AskQuestionText.text = "Ask Question";
+        var position = Microphone.GetPosition(m_deviceName);
+        Microphone.End(m_deviceName);
+        m_recording = false;
+        SendRecording();
+    }
+
+    private void SendRecording()
+    {
+        runWhisper.audioClip = m_clip;
+        runWhisper.Transcribe();
     }
 
 
@@ -485,6 +545,21 @@ public class GoalManager : MonoBehaviour
             CompleteGoal();
         }
 #endif
+        // Speech-To-Text functionality
+        if (m_recording)
+        {
+            if (Microphone.GetPosition(m_deviceName) >= m_clip.samples)
+            {
+                StopRecording();
+            }
+        }
+        if(outputString != "")
+        {
+            // Send question to server
+            WebSocket.SendData("Question " + runWhisper.outputString);
+            TurnOnAgentResponse();
+            outputString = "";
+        }
     }
 
     void ProcessGoals()
@@ -644,7 +719,6 @@ public class GoalManager : MonoBehaviour
 
     public void ToggleProgressBar(bool visibility)
     {
-        print("bbb");
         if (visibility)
         {
             TurnOnProgressBar();

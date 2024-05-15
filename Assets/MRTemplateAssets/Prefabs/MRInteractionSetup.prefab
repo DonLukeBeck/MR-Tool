@@ -477,6 +477,7 @@ MonoBehaviour:
   m_ProgressBar: {fileID: 0}
   m_ProgressBarSlider: {fileID: 0}
   m_ProgressText: {fileID: 0}
+  m_AskQuestionText: {fileID: 0}
   m_InteractiveMenu: {fileID: 0}
   m_LeftHand: {fileID: 0}
   m_RightHand: {fileID: 0}
@@ -486,7 +487,10 @@ MonoBehaviour:
   m_ModelLocationPointerToggle: {fileID: 0}
   m_PassthroughToggle: {fileID: 0}
   m_ARPlaneManager: {fileID: 2074947109}
+  m_deviceDropdown: {fileID: 0}
   WebSocket: {fileID: 0}
+  runWhisper: {fileID: 0}
+  outputString: 
 --- !u!1 &4770136204441838708
 GameObject:
   m_ObjectHideFlags: 0
