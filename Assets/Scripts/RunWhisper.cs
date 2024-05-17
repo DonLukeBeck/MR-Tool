@@ -73,20 +73,57 @@ public class RunWhisper : MonoBehaviour
 
     void Start()
     {
+        string streamingAssetsPath = Application.streamingAssetsPath;
+        string persistentDataPath = Application.persistentDataPath;
 
-        SetupWhiteSpaceShifts();
+        string[] modelFiles = new string[]
+        {
+        "AudioDecoder_Tiny.sentis",
+        "AudioEncoder_Tiny.sentis",
+        "LogMelSepctro.sentis"
+        };
 
-        GetTokens();
+        foreach (var file in modelFiles)
+        {
+            string sourcePath = Path.Combine(streamingAssetsPath, file);
+            string destinationPath = Path.Combine(persistentDataPath, file);
 
-        Model decoder = ModelLoader.Load(Application.streamingAssetsPath + "/AudioDecoder_Tiny.sentis");
+            if (!File.Exists(destinationPath))
+            {
+                // Copy file from StreamingAssets to persistentDataPath
+                if (Application.platform == RuntimePlatform.Android)
+                {
+                    // On Android, use WWW or UnityWebRequest to read from StreamingAssets
+                    using (WWW www = new WWW(sourcePath))
+                    {
+                        while (!www.isDone) { }
+                        if (string.IsNullOrEmpty(www.error))
+                        {
+                            File.WriteAllBytes(destinationPath, www.bytes);
+                        }
+                        else
+                        {
+                            Debug.LogError("Failed to load file from StreamingAssets: " + www.error);
+                        }
+                    }
+                }
+                else
+                {
+                    // On other platforms, simply copy the file
+                    File.Copy(sourcePath, destinationPath);
+                }
+            }
+        }
 
+        // Load the models from persistentDataPath
+        Model decoder = ModelLoader.Load(Path.Combine(persistentDataPath, "AudioDecoder_Tiny.sentis"));
         Model decoderWithArgMax = Functional.Compile(
             (tokens, audio) => Functional.ArgMax(decoder.Forward(tokens, audio)[0], 2),
             (decoder.inputs[0], decoder.inputs[1])
         );
 
-        Model encoder = ModelLoader.Load(Application.streamingAssetsPath + "/AudioEncoder_Tiny.sentis");
-        Model spectro = ModelLoader.Load(Application.streamingAssetsPath + "/LogMelSepctro.sentis");
+        Model encoder = ModelLoader.Load(Path.Combine(persistentDataPath, "AudioEncoder_Tiny.sentis"));
+        Model spectro = ModelLoader.Load(Path.Combine(persistentDataPath, "LogMelSepctro.sentis"));
 
         decoderEngine = WorkerFactory.CreateWorker(backend, decoderWithArgMax);
         encoderEngine = WorkerFactory.CreateWorker(backend, encoder);
