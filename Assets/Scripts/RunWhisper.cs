@@ -73,6 +73,10 @@ public class RunWhisper : MonoBehaviour
 
     void Start()
     {
+        SetupWhiteSpaceShifts();
+
+        GetTokens();
+
         string streamingAssetsPath = Application.streamingAssetsPath;
         string persistentDataPath = Application.persistentDataPath;
 
