@@ -75,13 +75,12 @@ public class RunWhisper : MonoBehaviour
     {
         SetupWhiteSpaceShifts();
 
-        GetTokens();
-
         string streamingAssetsPath = Application.streamingAssetsPath;
         string persistentDataPath = Application.persistentDataPath;
 
         string[] modelFiles = new string[]
         {
+        "vocab.json",
         "AudioDecoder_Tiny.sentis",
         "AudioEncoder_Tiny.sentis",
         "LogMelSepctro.sentis"
@@ -91,7 +90,6 @@ public class RunWhisper : MonoBehaviour
         {
             string sourcePath = Path.Combine(streamingAssetsPath, file);
             string destinationPath = Path.Combine(persistentDataPath, file);
-
             if (!File.Exists(destinationPath))
             {
                 // Copy file from StreamingAssets to persistentDataPath
@@ -119,15 +117,31 @@ public class RunWhisper : MonoBehaviour
             }
         }
 
+        #if UNITY_EDITOR
+                string selectedPath = Application.streamingAssetsPath;
+        #elif UNITY_ANDROID
+                string selectedPath = Application.persistentDataPath;
+        #else
+                string selectedPath = Application.streamingAssetsPath; // Default to streamingAssetsPath for other platforms
+        #endif
+
+        var jsonText = File.ReadAllText(Path.Combine(selectedPath, "vocab.json"));
+        var vocab = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, int>>(jsonText);
+        tokens = new string[vocab.Count];
+        foreach (var item in vocab)
+        {
+            tokens[item.Value] = item.Key;
+        }
+
         // Load the models from persistentDataPath
-        Model decoder = ModelLoader.Load(Path.Combine(persistentDataPath, "AudioDecoder_Tiny.sentis"));
+        Model decoder = ModelLoader.Load(Path.Combine(selectedPath, "AudioDecoder_Tiny.sentis"));
         Model decoderWithArgMax = Functional.Compile(
             (tokens, audio) => Functional.ArgMax(decoder.Forward(tokens, audio)[0], 2),
             (decoder.inputs[0], decoder.inputs[1])
         );
 
-        Model encoder = ModelLoader.Load(Path.Combine(persistentDataPath, "AudioEncoder_Tiny.sentis"));
-        Model spectro = ModelLoader.Load(Path.Combine(persistentDataPath, "LogMelSepctro.sentis"));
+        Model encoder = ModelLoader.Load(Path.Combine(selectedPath, "AudioEncoder_Tiny.sentis"));
+        Model spectro = ModelLoader.Load(Path.Combine(selectedPath, "LogMelSepctro.sentis"));
 
         decoderEngine = WorkerFactory.CreateWorker(backend, decoderWithArgMax);
         encoderEngine = WorkerFactory.CreateWorker(backend, encoder);
@@ -172,16 +186,6 @@ public class RunWhisper : MonoBehaviour
         LoadAudio();
         EncodeAudio();
         transcribe = true;
-    }
-    void GetTokens()
-    {
-        var jsonText = File.ReadAllText(Application.streamingAssetsPath + "/vocab.json");
-        var vocab = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, int>>(jsonText);
-        tokens = new string[vocab.Count];
-        foreach(var item in vocab)
-        {
-            tokens[item.Value] = item.Key;
-        }
     }
 
     void EncodeAudio()
