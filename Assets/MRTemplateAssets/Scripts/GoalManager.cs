@@ -175,6 +175,7 @@ public class GoalManager : MonoBehaviour
     private int k_step = 0;
     private float k_children = 0;
     private List<GameObject> m_Child = new List<GameObject>();
+    private int interaction_count = 0;
     // model type
     private bool m_isCabin = false;
     // tutorial video
@@ -321,7 +322,7 @@ public class GoalManager : MonoBehaviour
         // Update the progress bar
         m_ProgressBarSlider.value = k_step;
         UpdateProgressText();
-        print("Current Step" + k_step);
+        interaction_count++;
     }
 
     // Previous step button functionality
@@ -356,13 +357,12 @@ public class GoalManager : MonoBehaviour
         // Update the progress bar
         m_ProgressBarSlider.value = k_step;
         UpdateProgressText();
-        //print("Current Step" + k_step);
+        interaction_count++;
     }
 
     // Ask question button functionality
     public void AskQuestion()
     {
-
         if (!m_recording)
         {
             StartRecording();
@@ -372,6 +372,7 @@ public class GoalManager : MonoBehaviour
         {
             StopRecording();
         }
+        interaction_count++;
     }
 
     private void StartRecording()
@@ -445,6 +446,8 @@ public class GoalManager : MonoBehaviour
 
         // Show agent response
         TurnOnAgentResponse();
+
+        interaction_count++;
     }
 
     // Restart button functionality
@@ -469,6 +472,8 @@ public class GoalManager : MonoBehaviour
         // Update the progress bar
         m_ProgressBarSlider.value = k_step;
         UpdateProgressText();
+        WebSocket.SendData("Number of interactions: " + interaction_count);
+        interaction_count = 0;
     }
 
     // Next Video button functionality

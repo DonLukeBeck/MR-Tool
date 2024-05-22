@@ -81,6 +81,7 @@ public class UdpSocket : MonoBehaviour
 
     private void ProcessInput(string input)
     {
+        print(input);
         if (!isTxStarted) // First data arrived so tx started
         {
             isTxStarted = true;
@@ -104,12 +105,13 @@ public class UdpSocket : MonoBehaviour
                 m_ResponseText.transform.parent.gameObject.SetActive(true);
             });
         }
-        else if (input.StartsWith("I am unable to determine your current step"))
+        else if (input.StartsWith("Answer: "))
         {
+            string answer = input.Substring("Answer: ".Length);
             UnityMainThreadDispatcher.Instance().Enqueue(() =>
             {
                 m_ResponseText.transform.parent.gameObject.SetActive(false);
-                m_ResponseText.text = input;
+                m_ResponseText.text = answer;
                 m_ResponseText.transform.parent.gameObject.SetActive(true);
             });
         }

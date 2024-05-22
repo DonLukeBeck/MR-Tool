@@ -1,6 +1,7 @@
 import base64
 import os
 import time
+import threading
 
 import UdpComms as U
 from Assets.Scripts.WebSocket.ImageAssembler import ImageAssembler
@@ -40,8 +41,29 @@ def send_image_over_socket_in_chunks(image_name, chunk_size=8192):
         print(f"Error sending image data: {e}")
 
 
-while True:
+# Function to handle received questions
+def handle_question(question):
+    print(f"Received question: {question}")
+    user_input = input("Answer: ")
+    options = input("Send (1) User Input, (2) Default Message, (3) Both: ")
 
+    default_message = ("I am unable to determine your current step, please provide a picture of the model by looking "
+                       "towards it and pressing the \"Send Picture\" button.")
+
+    if options == '1':
+        response = user_input
+    elif options == '2':
+        response = default_message
+    elif options == '3':
+        response = user_input + default_message
+    else:
+        print("Invalid option. Sending default message.")
+        response = default_message
+
+    sock.SendData("Answer: " + response)
+
+
+while True:
     data = sock.ReadReceivedData()  # read data
     if data is not None:  # if NEW data has been received since last ReadReceivedData function call
         # Check if received data is an image chunk
@@ -49,9 +71,7 @@ while True:
             assembler.process_image_data(data)
         # Check if received data is a question
         elif data.startswith("Question"):
-            sock.SendData("I am unable to determine your current step, please provide a picture of the model by "
-                          "looking towards it and pressing the \"Send Picture\" button")  # send response
-            print(data)
+            handle_question(data)
         # Remove steps if the server incorporates a dialogue agent
         elif data.startswith("Step"):
             try:
@@ -160,6 +180,6 @@ while True:
             except Exception as e:
                 print(f"Error processing step data: {e}")
             print(data)
-        # else:
-        #     # print new received data
-        #     print(data)
+        else:
+            # print new received data
+            print(data)
