@@ -55,12 +55,72 @@ def handle_question(question):
     elif options == '2':
         response = default_message
     elif options == '3':
-        response = user_input + default_message
+        response = user_input + " " + default_message
     else:
         print("Invalid option. Sending default message.")
         response = default_message
 
     sock.SendData("Answer: " + response)
+
+
+# Function to handle step instructions
+def handle_step(model_info):
+    try:
+        step_number = int(input("Enter step number to send: "))
+        if model_info == 'Model 1':
+            instructions = {
+                1: "Step 1: Grab the black 2x2 plate with wheel holders and place it on the table",
+                2: "Step 2: Attach a black wheel to the plate with the wheel holders",
+                3: "Step 3: Attach the other black wheel to the plate with the wheel holders",
+                4: "Step 4: Grab the second black 2x2 plate with wheel holders and place it on the table",
+                5: "Step 5: Attach a black wheel to the new plate with the wheel holders",
+                6: "Step 6: Attach the other black wheel to the new plate with the wheel holders",
+                7: "Step 7: Insert the 2x4 yellow plate on top of one of the black plates and leave a 1x2 space on the other black plate",
+                8: "Step 8: Attach the yellow corner plate on top of the black plate",
+                9: "Step 9: Attach a 1x2 yellow plate in the middle of the model",
+                10: "Step 10: Attach the 2x2 yellow plate by the 1x2 yellow plate",
+                11: "Step 11: Attach the black panel with rounded corners on top of the yellow plate",
+                12: "Step 12: Attach the black panel with rounded corners on the other side of the previous panel",
+                13: "Step 13: Attach the black panel corner on top of the yellow plate",
+                14: "Step 14: Insert the other black panel corner onto the yellow plate",
+                15: "Step 15: Add the yellow 2x4 arched car fender in front of the model",
+                16: "Step 16: Add a 1x2 yellow plate near the black panels",
+                17: "Step 17: Add a 1x2 guided yellow plate near the previously inserted plate",
+                18: "Step 18: Attach the 2x2 blue slope onto the yellow plate",
+                19: "Step 19: Attach the 2x2 yellow tile with a groove on top of the blue slope"
+            }
+        elif model_info == 'Model 2':
+            instructions = {
+                1: "Step 1: Grab the black 2x2 plate with wheel holders and place it on the table",
+                2: "Step 2: Attach a black wheel rim to the plate with the wheel holders",
+                3: "Step 3: Attach the black wheel tire to the black wheel rim on the plate with the wheel holders",
+                4: "Step 4: Attach the other black wheel rim to the plate with the wheel holders",
+                5: "Step 5: Attach another black wheel tire to the black wheel rim on the plate with the wheel holders",
+                6: "Step 6: Grab the second black 2x2 plate with wheel holders and place it on the table",
+                7: "Step 7: Attach a black wheel rim to the new plate with the wheel holders",
+                8: "Step 8: Attach the black wheel tire to the black wheel rim on the plate with the wheel holders",
+                9: "Step 9: Attach the other black wheel rim to the plate with the wheel holders",
+                10: "Step 10: Attach another black wheel tire to the black wheel rim on the plate with the wheel holders",
+                11: "Step 11: Insert the 2x4 yellow plate on top of the black plates and leave a 1x2 space empty on both black plates",
+                12: "Step 12: Attach a 1x2 yellow plate in one of the empty spaces of the black plates",
+                13: "Step 13: Add a 1x2 guided yellow plate on top of the black plate",
+                14: "Step 14: Add the yellow 2x4 arched car fender on the other side of the model",
+                15: "Step 15: Attach the yellow corner plate on top of the arched car fender",
+                16: "Step 16: Add a 1x2 yellow plate behind the yellow corner plate",
+                17: "Step 17: Attach the 2x2 yellow plate on top of the yellow corner plate and the 1x2 yellow plate",
+                18: "Step 18: Attach the 2x2 blue slope onto the yellow plate",
+                19: "Step 19: Attach the 2x2 yellow tile with a groove on top of the blue slope"
+            }
+
+        if step_number in instructions:
+            sock.SendData(instructions[step_number])
+            image_filename = os.path.join("Images",
+                                          f"step{step_number}.jpg" if model_info == 'Model 1' else f"step_{step_number}.jpg")
+            send_image_over_socket_in_chunks(image_filename)
+        else:
+            print("Invalid step number.")
+    except Exception as e:
+        print(f"Error processing step data: {e}")
 
 
 while True:
@@ -72,114 +132,14 @@ while True:
         # Check if received data is a question
         elif data.startswith("Question"):
             handle_question(data)
-        # Remove steps if the server incorporates a dialogue agent
+        # Handle step data
         elif data.startswith("Step"):
             try:
-                step_number = int(data.split(' ')[1])
+                print(data)
                 model_info = ' '.join(data.split(' ')[2:])
-
-                if model_info == 'Model 1':
-                    if step_number == 1:
-                        sock.SendData("Step 1: Grab the black 2x2 plate with wheel holders and place it on the table")
-                    elif step_number == 2:
-                        sock.SendData("Step 2: Attach a black wheel to the plate with the wheel holders")
-                    elif step_number == 3:
-                        sock.SendData("Step 3: Attach the other black wheel to the plate with the wheel holders")
-                    elif step_number == 4:
-                        sock.SendData("Step 4: Grab the second black 2x2 plate with wheel holders and place it on the "
-                                      "table")
-                    elif step_number == 5:
-                        sock.SendData("Step 5: Attach a black wheel to the new plate with the wheel holders")
-                    elif step_number == 6:
-                        sock.SendData("Step 6: Attach the other black wheel to the new plate with the wheel holders")
-                    elif step_number == 7:
-                        sock.SendData("Step 7: Insert the 2x4 yellow plate on top of one of the black plates and "
-                                      "leave a 1x2 space on the other black plate")
-                    elif step_number == 8:
-                        sock.SendData("Step 8: Attach the yellow corner plate on top of the black plate")
-                    elif step_number == 9:
-                        sock.SendData("Step 9: Attach a 1x2 yellow plate in the middle of the model")
-                    elif step_number == 10:
-                        sock.SendData("Step 10: Attach the 2x2 yellow plate by the 1x2 yellow plate")
-                    elif step_number == 11:
-                        sock.SendData("Step 11: Attach the black panel with rounded corners on top of the yellow plate")
-                    elif step_number == 12:
-                        sock.SendData("Step 12: Attach the black panel with rounded corners on the other side of the "
-                                      "previous panel")
-                    elif step_number == 13:
-                        sock.SendData("Step 13: Attach the black panel corner on top of the yellow plate")
-                    elif step_number == 14:
-                        sock.SendData("Step 14: Insert the other black panel corner onto the yellow plate")
-                    elif step_number == 15:
-                        sock.SendData("Step 15: Add the yellow 2x4 arched car fender in front of the model")
-                    elif step_number == 16:
-                        sock.SendData("Step 16: Add a 1x2 yellow plate near the black panels")
-                    elif step_number == 17:
-                        sock.SendData("Step 17: Add a 1x2 guided yellow plate near the previously inserted plate")
-                    elif step_number == 18:
-                        sock.SendData("Step 18: Attach the 2x2 blue slope onto the yellow plate")
-                    elif step_number == 19:
-                        sock.SendData("Step 19: Attach the 2x2 yellow tile with a groove on top of the blue slope")
-
-                    image_filename = os.path.join("Images", f"step{step_number}.jpg")
-                    # Send image data over socket in chunks
-                    send_image_over_socket_in_chunks(image_filename)
-
-                if model_info == 'Model 2':
-                    if step_number == 1:
-                        sock.SendData("Step 1: Grab the black 2x2 plate with wheel holders and place it on the table")
-                    elif step_number == 2:
-                        sock.SendData("Step 2: Attach a black wheel rim to the plate with the wheel holders")
-                    elif step_number == 3:
-                        sock.SendData("Step 3: Attach the black wheel tire to the black wheel rim on the plate with "
-                                      "the wheel holders")
-                    elif step_number == 4:
-                        sock.SendData("Step 4: Attach the other black wheel rim to the plate with the wheel holders")
-                    elif step_number == 5:
-                        sock.SendData("Step 5: Attach another black wheel tire to the black wheel rim on the plate "
-                                      "with the wheel holders")
-                    elif step_number == 6:
-                        sock.SendData("Step 6: Grab the second black 2x2 plate with wheel holders and place it on the "
-                                      "table")
-                    elif step_number == 7:
-                        sock.SendData("Step 7: Attach a black wheel rim to the new plate with the wheel holders")
-                    elif step_number == 8:
-                        sock.SendData("Step 8: Attach the black wheel tire to the black wheel rim on the plate with "
-                                      "the wheel holders")
-                    elif step_number == 9:
-                        sock.SendData("Step 9: Attach the other black wheel rim to the plate with the wheel holders")
-                    elif step_number == 10:
-                        sock.SendData("Step 10: Attach another black wheel tire to the black wheel rim on the plate "
-                                      "with the wheel holders")
-                    elif step_number == 11:
-                        sock.SendData("Step 11:  Insert the 2x4 yellow plate on top of the black plates and leave a "
-                                      "1x2 space empty on both black plates")
-                    elif step_number == 12:
-                        sock.SendData("Step 12: Attach a 1x2 yellow plate in one of the empty spaces of the black "
-                                      "plates")
-                    elif step_number == 13:
-                        sock.SendData("Step 13: Add a 1x2 guided yellow plate on top of the black plate")
-                    elif step_number == 14:
-                        sock.SendData("Step 14: Add the yellow 2x4 arched car fender on the other side of the model")
-                    elif step_number == 15:
-                        sock.SendData("Step 15: Attach the yellow corner plate on top of the arched car fender")
-                    elif step_number == 16:
-                        sock.SendData("Step 16: Add a 1x2 yellow plate behind the yellow corner plate")
-                    elif step_number == 17:
-                        sock.SendData("Step 17: Attach the 2x2 yellow plate on top of the yellow corner plate and the "
-                                      "1x2 yellow plate")
-                    elif step_number == 18:
-                        sock.SendData("Step 18: Attach the 2x2 blue slope onto the yellow plate")
-                    elif step_number == 19:
-                        sock.SendData("Step 19: Attach the 2x2 yellow tile with a groove on top of the blue slope")
-
-                    image_filename = os.path.join("Images", f"step_{step_number}.jpg")
-                    # Send image data over socket in chunks
-                    send_image_over_socket_in_chunks(image_filename)
-
+                handle_step(model_info)
             except Exception as e:
                 print(f"Error processing step data: {e}")
-            print(data)
         else:
             # print new received data
-            print(data)
+            print("Other data: " + data)

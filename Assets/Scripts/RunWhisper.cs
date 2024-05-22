@@ -269,10 +269,10 @@ public class RunWhisper : MonoBehaviour
         return !(('!' <= c && c <= '~') || ('¡' <= c && c <= '¬') || ('®' <= c && c <= 'ÿ'));
     }
 
-    private void OnApplicationQuit()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
-    }
+    //private void OnApplicationQuit()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
+    //}
 
     private void OnDestroy()
     {

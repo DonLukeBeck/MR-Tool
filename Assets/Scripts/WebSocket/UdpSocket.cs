@@ -17,6 +17,10 @@ public class UdpSocket : MonoBehaviour
 
     [SerializeField] public TextMeshProUGUI m_ResponseText;
 
+    //text-to-speech
+    [SerializeField]
+    RunJets runJets;
+
     // Create necessary UdpClient objects
     UdpClient client;
     IPEndPoint remoteEndPoint;
@@ -101,7 +105,9 @@ public class UdpSocket : MonoBehaviour
             {
                 // Display the text in the UI
                 m_ResponseText.transform.parent.gameObject.SetActive(false);
-                m_ResponseText.text = input;
+                m_ResponseText.text = text;
+                runJets.inputText = text;
+                runJets.TextToSpeech();
                 m_ResponseText.transform.parent.gameObject.SetActive(true);
             });
         }
@@ -112,6 +118,8 @@ public class UdpSocket : MonoBehaviour
             {
                 m_ResponseText.transform.parent.gameObject.SetActive(false);
                 m_ResponseText.text = answer;
+                runJets.inputText = answer;
+                runJets.TextToSpeech();
                 m_ResponseText.transform.parent.gameObject.SetActive(true);
             });
         }
