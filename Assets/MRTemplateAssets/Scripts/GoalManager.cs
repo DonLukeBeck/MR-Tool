@@ -138,6 +138,9 @@ public class GoalManager : MonoBehaviour
     public GameObject m_InteractiveMenu;
 
     [SerializeField]
+    public GameObject m_HelperMenu;
+
+    [SerializeField]
     public GameObject m_LeftHand;
 
     [SerializeField]
@@ -323,6 +326,7 @@ public class GoalManager : MonoBehaviour
         m_ProgressBarSlider.value = k_step;
         UpdateProgressText();
         interaction_count++;
+        Debug.Log("step" + k_step);
     }
 
     // Previous step button functionality
@@ -358,6 +362,7 @@ public class GoalManager : MonoBehaviour
         m_ProgressBarSlider.value = k_step;
         UpdateProgressText();
         interaction_count++;
+        Debug.Log("step" + k_step);
     }
 
     // Ask question button functionality
@@ -640,6 +645,9 @@ public class GoalManager : MonoBehaviour
         // Show Interactive Menu  
         if (m_InteractiveMenu != null)
             m_InteractiveMenu.SetActive(true);
+
+        if (m_HelperMenu != null)
+            m_HelperMenu.SetActive(true);
 
         if (m_VideoPlayerToggle != null)
             m_VideoPlayerToggle.isOn = true;

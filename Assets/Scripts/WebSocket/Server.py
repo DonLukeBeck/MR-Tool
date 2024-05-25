@@ -1,7 +1,6 @@
 import base64
 import os
 import time
-import threading
 
 import UdpComms as U
 from Assets.Scripts.WebSocket.ImageAssembler import ImageAssembler
