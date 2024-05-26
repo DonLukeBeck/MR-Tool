@@ -8,6 +8,7 @@ using TMPro;
 using DG.Tweening;
 using LazyFollow = UnityEngine.XR.Interaction.Toolkit.UI.LazyFollow;
 using UnityEngine.Video;
+using System.Collections;
 
 public struct Goal
 {
@@ -133,6 +134,9 @@ public class GoalManager : MonoBehaviour
     
     [SerializeField]
     public TextMeshProUGUI m_AskQuestionText;
+
+    [SerializeField]
+    public TextMeshProUGUI m_SendPictureText;
 
     [SerializeField]
     public GameObject m_InteractiveMenu;
@@ -326,7 +330,6 @@ public class GoalManager : MonoBehaviour
         m_ProgressBarSlider.value = k_step;
         UpdateProgressText();
         interaction_count++;
-        Debug.Log("step" + k_step);
     }
 
     // Previous step button functionality
@@ -362,7 +365,6 @@ public class GoalManager : MonoBehaviour
         m_ProgressBarSlider.value = k_step;
         UpdateProgressText();
         interaction_count++;
-        Debug.Log("step" + k_step);
     }
 
     // Ask question button functionality
@@ -401,10 +403,16 @@ public class GoalManager : MonoBehaviour
         runWhisper.Transcribe();
     }
 
-
-    // Send picture button functionality
     public void SendPicture()
     {
+        StartCoroutine(SendPictureCoroutine());
+    }
+
+    private IEnumerator SendPictureCoroutine()
+    {
+        // Display "sending" message
+        m_SendPictureText.text = "Please wait...";
+
         // Capture image
         Texture2D screenshot = ScreenCapture.CaptureScreenshotAsTexture();
 
@@ -423,31 +431,34 @@ public class GoalManager : MonoBehaviour
         // Send chunks to server
         for (int i = 0; i < totalChunks; i++)
         {
-            // wait for previous packet to arrive
-            System.Threading.Thread.Sleep(250);
+            // Wait for previous packet to arrive
+            yield return new WaitForSeconds(0.5f);
 
             int offset = i * chunkSize;
             int length = Mathf.Min(chunkSize, bytes.Length - offset);
             byte[] chunk = new byte[length];
             Array.Copy(bytes, offset, chunk, 0, length);
             string chunkString = Convert.ToBase64String(chunk);
-            print("Chunk " + i + " of " + totalChunks + " sent");
-            print("Chunk string" + chunkString);
             WebSocket.SendData("Base64EncodedChunk " + chunkString);
         }
+
+        yield return new WaitForSeconds(0.5f);
 
         // Send step and model to server (remove lines if dialogue agent has a Vision Language Model and can recognize the step from the image)
         if (m_isCabin)
         {
             WebSocket.SendData("Step " + k_step.ToString() + " Model 2");
-            //print("Step sent " + k_step);
-        } else {
+        }
+        else
+        {
             WebSocket.SendData("Step " + k_step.ToString() + " Model 1");
-            //print("Step sent " + k_step);
         }
 
         // Release memory
         Destroy(screenshot);
+
+        // revert button to initial text
+        m_SendPictureText.text = "Send Picture";
 
         // Show agent response
         TurnOnAgentResponse();

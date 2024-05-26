@@ -36,7 +36,7 @@ public class UdpSocket : MonoBehaviour
         }
         catch (Exception err)
         {
-            print(err.ToString());
+            Debug.Log(err.ToString());
         }
     }
 
@@ -73,19 +73,17 @@ public class UdpSocket : MonoBehaviour
                 IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
                 byte[] data = client.Receive(ref anyIP);
                 string text = Encoding.UTF8.GetString(data);
-                print(">> " + text);
                 ProcessInput(text);
             }
             catch (Exception err)
             {
-                print(err.ToString());
+                Debug.Log(err.ToString());
             }
         }
     }
 
     private void ProcessInput(string input)
     {
-        print(input);
         if (!isTxStarted) // First data arrived so tx started
         {
             isTxStarted = true;
@@ -114,6 +112,7 @@ public class UdpSocket : MonoBehaviour
         else if (input.StartsWith("Answer: "))
         {
             string answer = input.Substring("Answer: ".Length);
+            //print("Answer: " + answer);
             UnityMainThreadDispatcher.Instance().Enqueue(() =>
             {
                 m_ResponseText.transform.parent.gameObject.SetActive(false);

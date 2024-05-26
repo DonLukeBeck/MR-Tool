@@ -49,11 +49,9 @@ public class ImageAssembler : MonoBehaviour
                 Console.WriteLine($"Error decoding Base64 data: {e}");
             }
         }
-        Debug.Log($"Received {receivedChunks} of {totalChunks} image chunks");
         // If all chunks received, assemble image
         if (receivedChunks == totalChunks)
         {
-            Debug.Log("All image chunks received");
             receivedChunks = 0;
             totalChunks = 0;
             Thread thread = new Thread(AssembleImage);
@@ -85,12 +83,8 @@ public class ImageAssembler : MonoBehaviour
                 tempColor.a = 255f;
                 rawImage.color = tempColor;
             }
-
-            Debug.Log($"Image loaded from {imageData.Length} bytes of data");
           
             rawImage.texture = texture;
-
-            Debug.Log("Image reconstructed and displayed on Quad.");
         });
     }
 
