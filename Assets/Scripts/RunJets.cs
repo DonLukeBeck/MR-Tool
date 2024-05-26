@@ -2,16 +2,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Sentis;
 using System.IO;
+/*
+ *              Jets Text-To-Speech Inference Code
+ *              ==================================
+ *              
+ * This file implements the Jets Text-to-speech model in Unity Sentis
+ * The model uses phenomes instead of raw text so you have to convert it first.
+ *  
+ * Go to https://huggingface.co/unity/sentis-jets-text-to-speech/tree/main and download jets-text-to-speech.sentis and phoneme_dict.txt
+ * Put the sentis file and the phoneme_dict.txt file in the Assets/StreamingAssets folder
+ * Install package com.unity.sentis
+ * 
+ */
 
-//                      Jets Text-To-Speech Inference
-//                      =============================
-//
-// This file implements the Jets Text-to-speech model in Unity Sentis
-// The model uses phenomes instead of raw text so you have to convert it first.
-// Place this file on the Main Camera
-// Add an audio source
-// Change the inputText
-// When running you can press space bar to play it again
 
 public class RunJets : MonoBehaviour
 {

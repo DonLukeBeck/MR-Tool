@@ -10,7 +10,8 @@ using System.Text;
  *              Whisper Inference Code
  *              ======================
  *  
- *  Put this script on the Main Camera
+ *  Go to https://huggingface.co/unity/sentis-whisper-tiny/tree/main and download audio-decoder-tiny.sentis, audio-encoder-tiny.sentis,
+ *                                                                                logmel-spectro.sentis and vocab.json
  *  
  *  In Assets/StreamingAssets put:
  *  
@@ -19,7 +20,7 @@ using System.Text;
  *  LogMelSepctro.sentis
  *  vocab.json
  * 
- *  Drag a 30s 16khz mono uncompressed audioclip into the audioClip field. 
+ *  
  * 
  *  Install package com.unity.nuget.newtonsoft-json from packagemanger
  *  Install package com.unity.sentis

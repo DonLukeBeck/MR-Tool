@@ -17,7 +17,7 @@ public class UdpSocket : MonoBehaviour
 
     [SerializeField] public TextMeshProUGUI m_ResponseText;
 
-    //text-to-speech
+    // text-to-speech
     [SerializeField]
     RunJets runJets;
 
@@ -73,7 +73,7 @@ public class UdpSocket : MonoBehaviour
                 IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
                 byte[] data = client.Receive(ref anyIP);
                 string text = Encoding.UTF8.GetString(data);
-                //print(">> " + text);
+                print(">> " + text);
                 ProcessInput(text);
             }
             catch (Exception err)

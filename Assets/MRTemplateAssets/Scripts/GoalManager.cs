@@ -408,8 +408,8 @@ public class GoalManager : MonoBehaviour
         // Capture image
         Texture2D screenshot = ScreenCapture.CaptureScreenshotAsTexture();
 
-        // Convert to byte array
-        byte[] bytes = screenshot.EncodeToPNG();
+        // Convert to byte array with specified quality (0 to 100)
+        byte[] bytes = screenshot.EncodeToJPG(50);
 
         // Define chunk size
         int chunkSize = 8192;
@@ -431,8 +431,8 @@ public class GoalManager : MonoBehaviour
             byte[] chunk = new byte[length];
             Array.Copy(bytes, offset, chunk, 0, length);
             string chunkString = Convert.ToBase64String(chunk);
-            //print("Chunk " + i + " of " + totalChunks + " sent");
-            //print("Chunk string" + chunkString);
+            print("Chunk " + i + " of " + totalChunks + " sent");
+            print("Chunk string" + chunkString);
             WebSocket.SendData("Base64EncodedChunk " + chunkString);
         }
 

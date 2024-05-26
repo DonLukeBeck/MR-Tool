@@ -50,7 +50,7 @@ class ImageAssembler:
             reconstructed_image = Image.open(BytesIO(image_data))
             print("Image reconstructed")
             # Use tempfile to create a temporary file
-            with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
+            with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as temp_file:
                 temp_file_path = temp_file.name
                 reconstructed_image.save(temp_file_path)
 
