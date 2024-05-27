@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Threading;
 using UnityEngine.Android;
 using TMPro;
+using System.Net.WebSockets;
 
 public class UdpSocket : MonoBehaviour
 {
@@ -92,7 +93,12 @@ public class UdpSocket : MonoBehaviour
         //if data starts with "ImageChunks" or "Base64EncodedChunk" process image data
         if (input.StartsWith("ImageChunks") || input.StartsWith("Base64EncodedChunk"))
         {
-            imageAssembler.ProcessImageData(input);
+            String error = "";
+            error = imageAssembler.ProcessImageData(input);
+            if (error != "") {
+                SendData(error);
+            }
+
         }
         else if (input.StartsWith("Step"))
         {

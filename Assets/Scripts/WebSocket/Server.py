@@ -11,6 +11,9 @@ assembler = ImageAssembler()
 # Create UDP socket to use for sending (and receiving)
 sock = U.UdpComms(udpIP="127.0.0.1", portTX=8000, portRX=8001, enableRX=True, suppressWarnings=True)
 
+model_info = ''
+step_number = ''
+
 
 # Function to send image data over socket in chunks
 def send_image_over_socket_in_chunks(image_name, chunk_size=8192):
@@ -19,7 +22,9 @@ def send_image_over_socket_in_chunks(image_name, chunk_size=8192):
         image_data = image_file.read()
         # Calculate total number of chunks
         total_chunks = (len(image_data) + chunk_size - 1) // chunk_size
-        # Send total number of chunks to server
+
+        sleep(0.5)
+        # Send total number of chunks to client
         sock.SendData(f"ImageChunks {total_chunks}")
 
         # Send image data in chunks
@@ -37,6 +42,7 @@ def send_image_over_socket_in_chunks(image_name, chunk_size=8192):
 
 # Function to handle received questions
 def handle_question(question):
+    print("Question " + question)
     user_input = input("Answer: ")
     sleep(0.5)
     options = input("Send (1) User Input, (2) Default Message, (3) Both: ")
@@ -60,6 +66,7 @@ def handle_question(question):
 
 # Function to handle step instructions
 def handle_step(data):
+    global model_info
     model_info = ' '.join(data.split(' ')[2:])
     if model_info == 'Model 1':
         instructions = {
@@ -107,6 +114,7 @@ def handle_step(data):
             18: "Step 18: Attach the 2x2 blue slope onto the yellow plate",
             19: "Step 19: Attach the 2x2 yellow tile with a groove on top of the blue slope"
         }
+    global step_number
     step_number = int(input("Enter step number to send: "))
 
     sleep(0.5)
@@ -131,7 +139,15 @@ while True:
             handle_question(data)
         # Handle step data
         elif data.startswith("Step"):
+            print(data)
             handle_step(data)
+        elif data.startswith("Resend Image"):
+            print(data)
+            image_filename = os.path.join("Images",
+                                          f"step{step_number}.jpg" if model_info == 'Model 1' else f"step_{step_number}.jpg")
+
+            sleep(0.5)
+            send_image_over_socket_in_chunks(image_filename)
         else:
             # print new received data
             print(data)

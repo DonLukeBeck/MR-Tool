@@ -6,26 +6,53 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using UnityEngine.UI;
+using System.Collections;
 
 public class ImageAssembler : MonoBehaviour
 {
     [SerializeField] RawImage rawImage; // Material to hold the reconstructed image
 
+    [SerializeField]
+    UdpSocket WebSocket;
+
     private List<byte[]> imageChunks = new List<byte[]>();
     private int totalChunks = 0;
     private int receivedChunks = 0;
 
-    public void ProcessImageData(string imageData)
+    public float duration = 5f; // Timer duration in seconds
+    private float timeRemaining;
+    string resend = "";
+
+    void Start()
+    {
+        timeRemaining = duration;
+        StartCoroutine(TimerCoroutine());
+    }
+
+    IEnumerator TimerCoroutine()
+    {
+        while (timeRemaining > 0)
+        {
+            timeRemaining -= Time.deltaTime;
+            yield return null; // Wait for the next frame
+        }
+        TimerEnded();
+    }
+
+    void TimerEnded()
+    {
+        resend = "Resend Image";
+    }
+
+    public string ProcessImageData(string imageData)
     {
         // Parse metadata
         if (imageData.StartsWith("ImageChunks"))
         {
             receivedChunks = 0;
             totalChunks = int.Parse(imageData.Split(' ')[1]);
-            Debug.Log("Total chunks" +  totalChunks);
-            return;
+            return "";
         }
-
         // Receive image data chunks
         if (imageData.StartsWith("Base64EncodedChunk"))
         {
@@ -39,27 +66,29 @@ public class ImageAssembler : MonoBehaviour
                 base64Data += new string('=', (4 - base64Data.Length % 4) % 4);
             }
 
-            try
-            {
-                // Decode Base64 encoded image data to bytes
-                byte[] chunkData = Convert.FromBase64String(base64Data);
-                imageChunks.Add(chunkData);
-                Debug.Log("Received chunks" + receivedChunks);
-                receivedChunks++;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Error decoding Base64 data: {e}");
-            }
+            // Decode Base64 encoded image data to bytes
+            byte[] chunkData = Convert.FromBase64String(base64Data);
+            imageChunks.Add(chunkData);
+            receivedChunks++;
         }
         // If all chunks received, assemble image
-        if (receivedChunks == totalChunks)
+        if (totalChunks == 0)
+        {
+            return "Resend Image - Image Chunk";
+        }
+        else if (receivedChunks == totalChunks)
         {
             receivedChunks = 0;
             totalChunks = 0;
             Thread thread = new Thread(AssembleImage);
             thread.Start();
         }
+        else if (resend != "") {
+            resend = "";
+            return "Resend Image - Timeout";
+        }
+        return "";
+
     }
 
     void AssembleImage()
@@ -86,8 +115,12 @@ public class ImageAssembler : MonoBehaviour
                 tempColor.a = 255f;
                 rawImage.color = tempColor;
             }
-          
+
+            //Debug.Log($"Image loaded from {imageData.Length} bytes of data");
+
             rawImage.texture = texture;
+
+            //Debug.Log("Image reconstructed and displayed on Quad.");
         });
     }
 

@@ -706,7 +706,7 @@ public class GoalManager : MonoBehaviour
     private void OnGrab(SelectEnterEventArgs args)
     {
         grab_count++;
-        Debug.Log("Model has been grabbed " + grab_count + " times.");
+        //Debug.Log("Model has been grabbed " + grab_count + " times.");
     }
     private void UpdateProgressText()
     {
