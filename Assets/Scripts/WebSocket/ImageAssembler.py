@@ -14,6 +14,7 @@ class ImageAssembler:
         # Parse metadata
         if image_data.startswith("ImageChunks"):
             self.total_chunks = int(image_data.split(' ')[1])
+            self.received_chunks = 0
             # print(f"Total chunks: {self.total_chunks}")
             return
         # Receive image data chunks
@@ -38,8 +39,8 @@ class ImageAssembler:
         # If all chunks received, assemble image
         if self.received_chunks == self.total_chunks:
             self.assemble_image()
-            self.received_chunks = 0
             self.total_chunks = 0
+            self.received_chunks = 0
 
     def assemble_image(self):
         # Concatenate chunks
@@ -48,7 +49,7 @@ class ImageAssembler:
         try:
             # Reconstruct image from byte array
             reconstructed_image = Image.open(BytesIO(image_data))
-            print("Image reconstructed")
+            # print("Image reconstructed")
             # Use tempfile to create a temporary file
             with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as temp_file:
                 temp_file_path = temp_file.name
@@ -56,6 +57,6 @@ class ImageAssembler:
 
             # This is the image that needs to be used by the dialogue agent to determine the current step
             # Display the temporary image file - this is just for testing purposes
-            reconstructed_image.show()
+            # reconstructed_image.show()
         except Exception as e:
             print(f"Error reconstructing image: {e}")
