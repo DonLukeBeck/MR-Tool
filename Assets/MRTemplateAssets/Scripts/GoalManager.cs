@@ -9,6 +9,7 @@ using DG.Tweening;
 using LazyFollow = UnityEngine.XR.Interaction.Toolkit.UI.LazyFollow;
 using UnityEngine.Video;
 using System.Collections;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public struct Goal
 {
@@ -183,6 +184,7 @@ public class GoalManager : MonoBehaviour
     private float k_children = 0;
     private List<GameObject> m_Child = new List<GameObject>();
     private int interaction_count = 0;
+    private int grab_count = 0;
     // model type
     private bool m_isCabin = false;
     // tutorial video
@@ -425,6 +427,7 @@ public class GoalManager : MonoBehaviour
         // Calculate number of chunks
         int totalChunks = Mathf.CeilToInt((float)bytes.Length / chunkSize);
 
+        yield return new WaitForSeconds(0.5f);
         // Send total number of chunks to server
         WebSocket.SendData("ImageChunks " + totalChunks.ToString());
 
@@ -469,6 +472,11 @@ public class GoalManager : MonoBehaviour
     // Restart button functionality
     public void Restart()
     {
+        StartCoroutine(RestartCoroutine());
+    }
+
+    private IEnumerator RestartCoroutine()
+    {
         k_step = 0;
 
         // Restore inital interactive menu
@@ -488,8 +496,12 @@ public class GoalManager : MonoBehaviour
         // Update the progress bar
         m_ProgressBarSlider.value = k_step;
         UpdateProgressText();
-        WebSocket.SendData("Number of interactions: " + interaction_count);
+        yield return new WaitForSeconds(0.5f);
+        WebSocket.SendData("Number of menu interactions: " + interaction_count);
         interaction_count = 0;
+        yield return new WaitForSeconds(0.5f);
+        WebSocket.SendData("Number of model interactions: " + grab_count);
+        grab_count = 0;
     }
 
     // Next Video button functionality
@@ -577,10 +589,16 @@ public class GoalManager : MonoBehaviour
         if(outputString != "")
         {
             // Send question to server
-            WebSocket.SendData("Question " + runWhisper.outputString);
-            TurnOnAgentResponse();
-            outputString = "";
+            StartCoroutine(SendQuestionCoroutine());
         }
+    }
+
+    private IEnumerator SendQuestionCoroutine()
+    {
+        yield return new WaitForSeconds(0.5f);
+        WebSocket.SendData("Question " + runWhisper.outputString);
+        TurnOnAgentResponse();
+        outputString = "";
     }
 
     void ProcessGoals()
@@ -637,6 +655,9 @@ public class GoalManager : MonoBehaviour
         if (m_3DModel != null)
             m_3DModel.SetActive(true);
 
+        //count how many times the 3D model is grabbed
+        m_3DModel.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>().selectEntered.AddListener(OnGrab);
+
         // Add children to the list
         foreach (Transform child in m_3DModelPieces.transform)
         {
@@ -682,6 +703,11 @@ public class GoalManager : MonoBehaviour
         }
     }
 
+    private void OnGrab(SelectEnterEventArgs args)
+    {
+        grab_count++;
+        Debug.Log("Model has been grabbed " + grab_count + " times.");
+    }
     private void UpdateProgressText()
     {
         if (k_step == 0)
@@ -836,7 +862,6 @@ public class GoalManager : MonoBehaviour
         if (follow != null)
             follow.rotationFollowMode = LazyFollow.RotationFollowMode.None;
 
-        //m_ProgressBar.SetActive(false);
         var target = Camera.main.transform;
         var targetRotation = target.rotation;
         var newTransform = target;

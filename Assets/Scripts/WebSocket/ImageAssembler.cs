@@ -20,7 +20,9 @@ public class ImageAssembler : MonoBehaviour
         // Parse metadata
         if (imageData.StartsWith("ImageChunks"))
         {
+            receivedChunks = 0;
             totalChunks = int.Parse(imageData.Split(' ')[1]);
+            Debug.Log("Total chunks" +  totalChunks);
             return;
         }
 
@@ -42,6 +44,7 @@ public class ImageAssembler : MonoBehaviour
                 // Decode Base64 encoded image data to bytes
                 byte[] chunkData = Convert.FromBase64String(base64Data);
                 imageChunks.Add(chunkData);
+                Debug.Log("Received chunks" + receivedChunks);
                 receivedChunks++;
             }
             catch (Exception e)
