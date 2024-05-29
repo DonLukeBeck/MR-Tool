@@ -42,7 +42,7 @@ def send_image_over_socket_in_chunks(image_name, chunk_size=8192):
 
 # Function to handle received questions
 def handle_question(question):
-    print("Question " + question)
+    print(question)
     user_input = input("Answer: ")
     sleep(0.5)
     options = input("Send (1) User Input, (2) Default Message, (3) Both: ")

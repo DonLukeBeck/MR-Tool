@@ -590,15 +590,16 @@ public class GoalManager : MonoBehaviour
         {
             // Send question to server
             StartCoroutine(SendQuestionCoroutine());
+            outputString = "";
         }
     }
 
     private IEnumerator SendQuestionCoroutine()
     {
-        WebSocket.SendData("Question " + runWhisper.outputString);
         yield return new WaitForSeconds(0.5f);
+        WebSocket.SendData("Question " + runWhisper.outputString);
+        yield return new WaitForSeconds(3f);
         TurnOnAgentResponse();
-        outputString = "";
     }
 
     void ProcessGoals()
