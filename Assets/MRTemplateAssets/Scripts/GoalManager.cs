@@ -287,6 +287,21 @@ public class GoalManager : MonoBehaviour
             // Show interactive menu buttons
             m_NextStepButtonTextField.text = "Next Step";
             TurnOnProgressBar();
+
+            TurnOnAgentResponse();
+            RectTransform panelHeight = GameObject.Find("Multimodal Response").GetComponent<RectTransform>();        // Get the current sizeDelta
+            Vector2 sizeDelta = panelHeight.sizeDelta;
+            // Modify the height
+            sizeDelta.y = 150f;
+            // Assign the modified sizeDelta back to the RectTransform
+            panelHeight.sizeDelta = sizeDelta;
+            // Get the current anchoredPosition
+            Vector2 anchoredPosition = panelHeight.anchoredPosition;
+            // Modify the Y position
+            anchoredPosition.y = 1f;
+            // Assign the modified anchoredPosition back to the RectTransform
+            panelHeight.anchoredPosition = anchoredPosition;
+
             m_AskQuestionButton.SetActive(true);
             m_SendPictureButton.SetActive(true);
             m_RestartButton.SetActive(true);
@@ -465,6 +480,18 @@ public class GoalManager : MonoBehaviour
 
         // Show agent response
         TurnOnAgentResponse();
+        RectTransform panelHeight = GameObject.Find("Multimodal Response").GetComponent<RectTransform>();        // Get the current sizeDelta
+        Vector2 sizeDelta = panelHeight.sizeDelta;
+        // Modify the height
+        sizeDelta.y = 600;
+        // Assign the modified sizeDelta back to the RectTransform
+        panelHeight.sizeDelta = sizeDelta;
+        // Get the current anchoredPosition
+        Vector2 anchoredPosition =panelHeight.anchoredPosition;
+        // Modify the Y position
+        anchoredPosition.y = 2.5f;
+        // Assign the modified anchoredPosition back to the RectTransform
+        panelHeight.anchoredPosition = anchoredPosition;
 
         interaction_count++;
     }
