@@ -74,3 +74,5 @@ crashlytics-build.properties
 Assets/StreamingAssets/
 
 Assets/Scripts/WebSocket/__pycache__/
+
+.idea/
