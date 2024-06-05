@@ -5,12 +5,14 @@ from time import sleep
 import UdpComms as U
 from Assets.Scripts.WebSocket.ImageAssembler import ImageAssembler
 
-# Initialize the ImageAssembler
+# Initialize the ImageAssembler that handles receiving and reconstructing images
 assembler = ImageAssembler()
 
 # Create UDP socket to use for sending (and receiving)
 sock = U.UdpComms(udpIP="127.0.0.1", portTX=8000, portRX=8001, enableRX=True, suppressWarnings=True)
 
+# Data to be used by the dialogue agent to determine the current step
+# Remove this if dialogue agent can determine the step on its own
 model_info = ''
 step_number = ''
 
@@ -42,6 +44,7 @@ def send_image_over_socket_in_chunks(image_name, chunk_size=8192):
 
 # Function to handle received questions
 def handle_question(question):
+    # Wizard of Oz approach to replace the dialogue agent until an AI model is connected
     print(question)
     user_input = input("Answer: ")
     sleep(0.5)
@@ -117,7 +120,6 @@ def handle_step(data):
     global step_number
     step_number = int(input("Enter step number to send: "))
 
-    sleep(0.5)
     image_filename = os.path.join("Images",
                                   f"step{step_number}.jpg" if model_info == 'Model 1' else f"step_{step_number}.jpg")
 
@@ -139,10 +141,10 @@ while True:
             handle_question(data)
         # Handle step data
         elif data.startswith("Step"):
-            print(data)
+            # print(data)
             handle_step(data)
         elif data.startswith("Resend Image"):
-            print(data)
+            # print(data)
             image_filename = os.path.join("Images",
                                           f"step{step_number}.jpg" if model_info == 'Model 1' else f"step_{step_number}.jpg")
 

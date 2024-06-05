@@ -93,7 +93,6 @@ public class ImageAssembler : MonoBehaviour
 
     void AssembleImage()
     {
-
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
             byte[] imageData = CombineChunks(imageChunks);

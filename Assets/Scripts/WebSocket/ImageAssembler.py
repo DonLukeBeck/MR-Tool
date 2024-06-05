@@ -53,9 +53,9 @@ class ImageAssembler:
             # Use tempfile to create a temporary file
             with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as temp_file:
                 temp_file_path = temp_file.name
+                # This is the image that needs to be used by the dialogue agent to determine the current step
                 reconstructed_image.save(temp_file_path)
 
-            # This is the image that needs to be used by the dialogue agent to determine the current step
             # Display the temporary image file - this is just for testing purposes
             # reconstructed_image.show()
         except Exception as e:

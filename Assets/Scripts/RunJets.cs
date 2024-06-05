@@ -19,9 +19,6 @@ using System.IO;
 public class RunJets : MonoBehaviour
 {
     public string inputText = ""; 
-        //"Once upon a time, there lived a girl called Alice. She lived in a house in the woods.";
-    //string inputText = "The quick brown fox jumped over the lazy dog";
-    //string inputText = "There are many uses of the things she uses!";
 
     //Set to true if we have put the phoneme_dict.txt in the Assets/StreamingAssets folder
     bool hasPhenomeDictionary = true;

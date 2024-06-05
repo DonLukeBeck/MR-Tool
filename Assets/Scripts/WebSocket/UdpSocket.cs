@@ -16,9 +16,10 @@ public class UdpSocket : MonoBehaviour
     [SerializeField] int rxPort = 8021; // port to receive data from Python on
     [SerializeField] int txPort = 8020; // port to send data to Python on
 
+    // The response to be shown on the UI to the user
     [SerializeField] public TextMeshProUGUI m_ResponseText;
 
-    // text-to-speech
+    // Text-to-Speech
     [SerializeField]
     RunJets runJets;
 
@@ -90,7 +91,7 @@ public class UdpSocket : MonoBehaviour
             isTxStarted = true;
         }
 
-        //if data starts with "ImageChunks" or "Base64EncodedChunk" process image data
+        // if data starts with "ImageChunks" or "Base64EncodedChunk" start assembling the image
         if (input.StartsWith("ImageChunks") || input.StartsWith("Base64EncodedChunk"))
         {
             String error = "";
@@ -100,6 +101,7 @@ public class UdpSocket : MonoBehaviour
             }
 
         }
+        // If data starts with "Step", an image from the manual as well as textual instructions has been received
         else if (input.StartsWith("Step"))
         {
             // Remove "Step x: " from the start of the string
@@ -110,19 +112,23 @@ public class UdpSocket : MonoBehaviour
                 // Display the text in the UI
                 m_ResponseText.transform.parent.gameObject.SetActive(false);
                 m_ResponseText.text = text;
+                // Transform the text into speech
                 runJets.inputText = text;
                 runJets.TextToSpeech();
                 m_ResponseText.transform.parent.gameObject.SetActive(true);
             });
         }
+        // If data starts with "Answer", an answer to the question asked by the user has been received
         else if (input.StartsWith("Answer: "))
         {
             string answer = input.Substring("Answer: ".Length);
             //print("Answer: " + answer);
             UnityMainThreadDispatcher.Instance().Enqueue(() =>
             {
+                // Display the text in the UI
                 m_ResponseText.transform.parent.gameObject.SetActive(false);
                 m_ResponseText.text = answer;
+                // Transform the text into speech
                 runJets.inputText = answer;
                 runJets.TextToSpeech();
                 m_ResponseText.transform.parent.gameObject.SetActive(true);

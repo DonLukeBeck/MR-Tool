@@ -835,16 +835,16 @@ public class GoalManager : MonoBehaviour
         }
     }
 
-    void TurnOnVideoPlayer()
+    void TurnOnObject(GameObject obj, Vector3 targetOffset, bool setProgressBarToggle = false)
     {
-        if (m_VideoPlayer.activeSelf)
+        if (obj.activeSelf)
             return;
 
-        var follow = m_VideoPlayer.GetComponent<LazyFollow>();
+        var follow = obj.GetComponent<LazyFollow>();
         if (follow != null)
             follow.rotationFollowMode = LazyFollow.RotationFollowMode.None;
 
-        m_VideoPlayer.SetActive(false);
+        obj.SetActive(false);
         var target = Camera.main.transform;
         var targetRotation = target.rotation;
         var newTransform = target;
@@ -857,116 +857,44 @@ public class GoalManager : MonoBehaviour
         );
 
         newTransform.rotation = targetRotation;
-        var targetPosition = target.position + newTransform.TransformVector(m_TargetOffset);
-        m_VideoPlayer.transform.position = targetPosition;
+        var targetPosition = target.position + newTransform.TransformVector(targetOffset);
+        obj.transform.position = targetPosition;
 
-
-        var forward = target.position - m_VideoPlayer.transform.position;
-        var targetPlayerRotation = forward.sqrMagnitude > float.Epsilon ? Quaternion.LookRotation(forward, Vector3.up) : Quaternion.identity;
-        targetPlayerRotation *= Quaternion.Euler(new Vector3(0f, 180f, 0f));
-        var targetPlayerEuler = targetPlayerRotation.eulerAngles;
-        var currentEuler = m_VideoPlayer.transform.rotation.eulerAngles;
-        targetPlayerRotation = Quaternion.Euler
+        var forward = target.position - obj.transform.position;
+        var targetObjectRotation = forward.sqrMagnitude > float.Epsilon ? Quaternion.LookRotation(forward, Vector3.up) : Quaternion.identity;
+        targetObjectRotation *= Quaternion.Euler(new Vector3(0f, 180f, 0f));
+        var targetObjectEuler = targetObjectRotation.eulerAngles;
+        var currentEuler = obj.transform.rotation.eulerAngles;
+        targetObjectRotation = Quaternion.Euler
         (
             currentEuler.x,
-            targetPlayerEuler.y,
+            targetObjectEuler.y,
             currentEuler.z
         );
 
-        m_VideoPlayer.transform.rotation = targetPlayerRotation;
-        m_VideoPlayer.SetActive(true);
+        obj.transform.rotation = targetObjectRotation;
+        obj.SetActive(true);
+
         if (follow != null)
             follow.rotationFollowMode = LazyFollow.RotationFollowMode.LookAtWithWorldUp;
+
+        if (setProgressBarToggle)
+            m_ProgressBarToggle.isOn = true;
+    }
+
+    void TurnOnVideoPlayer()
+    {
+        TurnOnObject(m_VideoPlayer, m_TargetOffset);
     }
 
     void TurnOnProgressBar()
     {
         Vector3 m_TargetOffsetBar = new Vector3(0f, 0.75f, 1.5f);
-
-        if (m_ProgressBar.activeSelf)
-            return;
-
-        var follow = m_ProgressBar.GetComponent<LazyFollow>();
-        if (follow != null)
-            follow.rotationFollowMode = LazyFollow.RotationFollowMode.None;
-
-        var target = Camera.main.transform;
-        var targetRotation = target.rotation;
-        var newTransform = target;
-        var targetEuler = targetRotation.eulerAngles;
-        targetRotation = Quaternion.Euler
-        (
-            0f,
-            targetEuler.y,
-            targetEuler.z
-        );
-
-        newTransform.rotation = targetRotation;
-        var targetPosition = target.position + newTransform.TransformVector(m_TargetOffsetBar); ;
-        m_ProgressBar.transform.position = targetPosition;
-
-
-        var forward = target.position - m_ProgressBar.transform.position;
-        var targetPlayerRotation = forward.sqrMagnitude > float.Epsilon ? Quaternion.LookRotation(forward, Vector3.up) : Quaternion.identity;
-        targetPlayerRotation *= Quaternion.Euler(new Vector3(0f, 180f, 0f));
-        var targetPlayerEuler = targetPlayerRotation.eulerAngles;
-        var currentEuler = m_ProgressBar.transform.rotation.eulerAngles;
-        targetPlayerRotation = Quaternion.Euler
-        (
-            currentEuler.x,
-            targetPlayerEuler.y,
-            currentEuler.z
-        );
-
-        m_ProgressBar.transform.rotation = targetPlayerRotation;
-        m_ProgressBar.SetActive(true);
-        if (follow != null)
-            follow.rotationFollowMode = LazyFollow.RotationFollowMode.LookAtWithWorldUp;
-        m_ProgressBarToggle.isOn = true;
+        TurnOnObject(m_ProgressBar, m_TargetOffsetBar, true);
     }
 
     void TurnOnAgentResponse()
     {
-        if (m_AgentResponse.activeSelf)
-            return;
-
-        var follow = m_AgentResponse.GetComponent<LazyFollow>();
-        if (follow != null)
-            follow.rotationFollowMode = LazyFollow.RotationFollowMode.None;
-
-        m_AgentResponse.SetActive(false);
-        var target = Camera.main.transform;
-        var targetRotation = target.rotation;
-        var newTransform = target;
-        var targetEuler = targetRotation.eulerAngles;
-        targetRotation = Quaternion.Euler
-        (
-            0f,
-            targetEuler.y,
-            targetEuler.z
-        );
-
-        newTransform.rotation = targetRotation;
-        var targetPosition = target.position + newTransform.TransformVector(m_TargetOffset);
-        m_AgentResponse.transform.position = targetPosition;
-
-
-        var forward = target.position - m_AgentResponse.transform.position;
-        var targetPlayerRotation = forward.sqrMagnitude > float.Epsilon ? Quaternion.LookRotation(forward, Vector3.up) : Quaternion.identity;
-        targetPlayerRotation *= Quaternion.Euler(new Vector3(0f, 180f, 0f));
-        var targetPlayerEuler = targetPlayerRotation.eulerAngles;
-        var currentEuler = m_AgentResponse.transform.rotation.eulerAngles;
-        targetPlayerRotation = Quaternion.Euler
-        (
-            currentEuler.x,
-            targetPlayerEuler.y,
-            currentEuler.z
-        );
-
-        m_AgentResponse.transform.rotation = targetPlayerRotation;
-
-        m_AgentResponse.SetActive(true);
-        if (follow != null)
-            follow.rotationFollowMode = LazyFollow.RotationFollowMode.LookAtWithWorldUp;
+        TurnOnObject(m_AgentResponse, m_TargetOffset);
     }
 }

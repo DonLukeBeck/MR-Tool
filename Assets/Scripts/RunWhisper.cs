@@ -81,10 +81,10 @@ public class RunWhisper : MonoBehaviour
 
         string[] modelFiles = new string[]
         {
-        "vocab.json",
-        "AudioDecoder_Tiny.sentis",
-        "AudioEncoder_Tiny.sentis",
-        "LogMelSepctro.sentis"
+            "vocab.json",
+            "AudioDecoder_Tiny.sentis",
+            "AudioEncoder_Tiny.sentis",
+            "LogMelSepctro.sentis"
         };
 
         foreach (var file in modelFiles)
