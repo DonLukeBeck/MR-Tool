@@ -31,13 +31,17 @@ The spatial UI includes a coaching UI and video player for onboarding users into
 
 The following paths contain the most important documents and functionality of the tool:
  * Assets/MRTemplateAssets/Scripts/GoalManager.cs is the utility class that controls most of the application:
-     - The Start() function initial
+     - The Start() function initializes the Onboarding Goals, the text, and the visibility of UI elements and buttons, as well as the tutorial videos.
+     - The NextStep() and PreviousStep() functions handle the progression of the 3D Model through the steps, update the elements, and perform the color animations.
+     - The AskQuestion() method enables the functionality for recording the user's question via the microphone and then sending it to the AI model for transcription.
+     - The SendPicture() method handles capturing the screen, breaking the image into chunks, and sending it over the WebSocket connection. The function also updates the UI to display the dialogue agent response.
+     - The Restart() method restarts the assembly process and sends to the server the number of menu and model interactions.
 
  * Assets/Scripts/WebSocket/Images folder contains the images from the manual from both models. The first model images are named with the following structure step{step_number}.jpg while the second model is named step_{step_number}.jpg
 
  * Assets/Scripts/WebSocket/Manuals folder contains the PDF versions of the Lego set manuals used in the experiment 
 
- * Assets/Scripts/WebSocket/Server.py contains the script that awaits data continuously from the client. Depending on the type of data received, it delegates to appropriate handling functions:
+ * Assets/Scripts/WebSocket/Server.py contains the script that continuously awaits data from the client. Depending on the type of data received, it delegates to appropriate handling functions:
    - For image data, it uses the ImageAssembler to handle the reconstruction of images transmitted in chunks over a network connection
    - For questions, it calls handle_question
    - For step instructions, it calls handle_step
@@ -55,4 +59,4 @@ Currently, the project is set to run within the Unity Editor, hence the Server i
 
 # Application walkthrough
 
-At the beginning, the user selects the model he would like to assemble, as well as the microphone to be used during assembly. After this initial step 
+At the beginning, the user selects the model he would like to assemble, as well as the microphone to be used during assembly. After this initial step, the user will see four instruction cards detailing the experiment setup and how to interact with the environment. Once the cards are either skipped or read using either gestures or controllers, the user will see the real world and his UI. Before starting the assembly, there are two tutorial videos explaining pinching and poking. To the left, the interactive menu can be found, while on the right lies the 3D Model. Further to the right there is another helper menu to be used just in case something does not go as intended. It contains a toggle for the tutorial videos, the onboarding cards, the progress bar, the passthrough (the switch between VR and MR), and a model finder (an arrow that points toward the 3D Model in case it gets lost during assembly). Once the user presses on the 'Start Assembly' button, the tutorial videos will disappear (if they were not already closed by the user) and a progress bar as well as a textual response of the dialogue agent will appear in their place. The 3D Model will now show the first piece that needs to be assembled. The user can press either the 'Next Step' or 'Previous Step' button to change the assembly step. The dialogue-agent interaction can be done with either the 'Ask Question' or 'Send Picture' button. Finally, the Restart button will reset the assembly to the beginning. 
