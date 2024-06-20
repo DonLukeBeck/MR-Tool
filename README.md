@@ -56,6 +56,8 @@ Currently, the project is set to run within the Unity Editor, hence the Server i
 
  * Within the UdpSocket game object script component change the IP, Rx Port, and Tx Port to the values of your server.
  * Change the sock variable on the Server.py to the IP of the headset, while the Rx Port and Tx Port need to be the opposite values added previously to UdpSocket.
+ * Instead of pressing play within the Unity Editor, follow the [Mixed Reality Template](https://docs.unity3d.com/Packages/com.unity.template.mixed-reality@1.0/manual/index.html) build instructions at the bottom of the page to deploy the app on your device.
+ * Once the app is built, open it on the headset and make sure Server.py is running on your machine or a cloud server.
 
 # Application walkthrough
 
